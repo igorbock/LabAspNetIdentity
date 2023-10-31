@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,10 +7,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-
 var MigrationsAssembly = typeof(Program).Assembly.GetName().Name;
-var ConnectionString = "Host=localhost;Port=5433;Database=identity;User Id=postgres;Password=teste";
+var ConnectionString = "Host=isabelle.db.elephantsql.com;Port=5432;Database=yezkrefj;User Id=yezkrefj;Password=kiLj5HdtfNdyK2dp9t1o4LmgbI6t7p6T";
 
 builder.Services.AddDbContext<IS4DbContext>(opt => opt.UseNpgsql(ConnectionString));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
