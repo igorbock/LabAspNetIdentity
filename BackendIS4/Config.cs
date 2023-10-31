@@ -47,6 +47,18 @@ public static class Config
         }
     }
 
+    public static IEnumerable<IdentityResource> IdentityResources
+    {
+        get
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile()
+            };
+        }
+    }
+
     public static List<TestUser> TestUsers
     {
         get
@@ -57,14 +69,14 @@ public static class Config
                 {
                     SubjectId = new Guid().ToString(),
                     Username = "Igor",
-                    Password = "igor123",
+                    Password = "Igor123@",
                     IsActive = true
                 },
                 new TestUser
                 {
                     SubjectId = new Guid().ToString(),
                     Username = "Rafaela",
-                    Password = "rafa123",
+                    Password = "Rafa123@",
                     IsActive = true
                 }
             };
