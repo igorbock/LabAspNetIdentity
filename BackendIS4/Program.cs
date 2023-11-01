@@ -27,13 +27,17 @@ builder.Services.AddIdentityServer()
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//}
+app.UseCors(opt => opt
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
-app.UseSwagger();
-app.UseSwaggerUI();
+//Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 await app.MigrationExtensionAsync();
 

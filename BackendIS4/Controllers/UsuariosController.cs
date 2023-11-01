@@ -12,7 +12,7 @@ public class UsuariosController : Controller, IUsuariosController
     }
 
     [HttpPost]
-    public async Task<string> Create(UsuarioDTO user)
+    public async Task<string> Create(RegistrarUsuarioDTO user)
     {
         var novoUser = new IdentityUser(user.Nome)
         {

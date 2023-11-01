@@ -1,0 +1,34 @@
+﻿@page "/login"
+@attribute [AllowAnonymous]
+
+<h3>Login</h3>
+
+<EditForm Model="Usuario" OnSubmit="CM_FazerLogin">
+    <label for="usuario">Usuário</label>
+    <InputText @bind-Value="Usuario!.Nome" DisplayName="usuario"></InputText><br />
+    <label for="senha">Senha</label>
+    <InputText type="password" @bind-Value="Usuario!.Senha" DisplayName="senha"></InputText>
+    <input type="submit" value="Login"/>
+</EditForm>
+
+@code {
+    public class UsuarioDTO
+    {
+        public string? Nome { get; set; }
+        public string? Senha { get; set; }
+    }
+
+    [Inject]
+    public IS4AuthenticationStateProvider? C_StateProvider { get; set; }
+    [Inject]
+    public NavigationManager? C_NavigationManager { get; set; }
+
+    public UsuarioDTO? Usuario { get; set; } = new UsuarioDTO();
+    public string? Token { get; set; }
+
+    public async Task CM_FazerLogin()
+    {
+        await C_StateProvider!.LoginAsync(Usuario!.Nome!, Usuario.Senha!);
+        C_NavigationManager!.NavigateTo("/");
+    }
+}

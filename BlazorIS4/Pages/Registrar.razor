@@ -1,0 +1,24 @@
+﻿@page "/registrar"
+@attribute [AllowAnonymous]
+
+<h3>Registrar</h3>
+
+<EditForm Model="C_RegistrarDTO" OnValidSubmit="CM_Registrar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label for="nome">Nome</label>
+    <InputText @bind-Value="C_RegistrarDTO!.Nome" DisplayName="nome"></InputText><br />
+    <label for="email">Email</label>
+    <InputText type="email" @bind-Value="C_RegistrarDTO!.Email" DisplayName="email"></InputText><br />
+    <label for="telefone">Telefone</label>
+    <InputText type="phone" @bind-Value="C_RegistrarDTO!.Telefone" DisplayName="telefone"></InputText><br />
+    <label for="senha">Senha</label>
+    <InputText type="password" @bind-Value="C_RegistrarDTO!.Senha" DisplayName="senha"></InputText><br />
+    <label for="confirmar">Confirma senha</label>
+    <InputText type="password" @bind-Value="C_RegistrarDTO!.ConfirmaSenha" DisplayName="confirmar"></InputText><br />
+
+    <input type="submit" value="Registrar" />
+</EditForm>
+
+<div class="alert alert-error">@C_MensagemErro</div>
