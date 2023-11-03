@@ -9,6 +9,9 @@ public static class Config
             return new List<ApiScope>
             {
                 new ApiScope("API-LAB", "API Laboratório")
+                {
+                    UserClaims = new[] { "username" }
+                }
             };
         }
     }
@@ -31,11 +34,34 @@ public static class Config
                     },
 
                     AllowedScopes = { "API-LAB" }
+                },
+                new Client
+                {
+                    ClientId = "ClientLab2",
+
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    AccessTokenType = AccessTokenType.Jwt,
+                    //AccessTokenLifetime = 120, //86400,
+                    //IdentityTokenLifetime = 120, //86400,
+                    UpdateAccessTokenClaimsOnRefresh = true,
+                    SlidingRefreshTokenLifetime = 30,
+                    AllowOfflineAccess = true,
+                    RefreshTokenExpiration = TokenExpiration.Absolute,
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    AlwaysSendClientClaims = true,
+                    ClientSecrets=  new List<Secret> { new Secret("lab_segredo".Sha256()) },
+                    AllowedScopes = {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "API-LAB"
+                    }
                 }
             };
         }
     }
-    
+
     public static IEnumerable<ApiResource> ApiResources
     {
         get

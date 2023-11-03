@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackendIS4", "BackendIS4\Ba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorIS4", "BlazorIS4\BlazorIS4.csproj", "{3721243F-736F-4B70-922E-F9478587A8D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibIS4", "LibIS4\LibIS4.csproj", "{C31A646A-4B10-402A-BA75-87471DEEB827}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibIS4", "LibIS4\LibIS4.csproj", "{C31A646A-4B10-402A-BA75-87471DEEB827}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

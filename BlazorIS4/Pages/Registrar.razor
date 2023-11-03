@@ -5,7 +5,7 @@
 
 <EditForm Model="C_RegistrarDTO" OnValidSubmit="CM_Registrar">
     <DataAnnotationsValidator />
-    <ValidationSummary />
+    <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
 
     <label for="nome">Nome</label>
     <InputText @bind-Value="C_RegistrarDTO!.Nome" DisplayName="nome"></InputText><br />

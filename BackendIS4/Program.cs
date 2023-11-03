@@ -2,28 +2,38 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(opt =>
+{
+    opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var MigrationsAssembly = typeof(Program).Assembly.GetName().Name;
 var ConnectionString = "Host=isabelle.db.elephantsql.com;Port=5432;Database=yezkrefj;User Id=yezkrefj;Password=kiLj5HdtfNdyK2dp9t1o4LmgbI6t7p6T";
+#if DEBUG
+{
+    ConnectionString = "Host=localhost;Port=5433;Database=identity;User Id=postgres;Password=teste";
+}
+#endif
 
 builder.Services.AddDbContext<IS4DbContext>(opt => opt.UseNpgsql(ConnectionString));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<IS4DbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddIdentityServer()
-    .AddDeveloperSigningCredential()
-    .AddConfigurationStore(opt => { opt.ConfigureDbContext = db => db.UseNpgsql(ConnectionString, sql => sql.MigrationsAssembly(MigrationsAssembly)); })
-    .AddOperationalStore(opt => { opt.ConfigureDbContext = db => db.UseNpgsql(ConnectionString, sql => sql.MigrationsAssembly(MigrationsAssembly)); })
-    .AddAspNetIdentity<IdentityUser>();
-    //.AddInMemoryApiScopes(Config.ApiScopes)
-    //.AddInMemoryClients(Config.Clients)
-    //.AddInMemoryApiResources(Config.ApiResources)
-    //.AddTestUsers(Config.TestUsers);
+var m_IdentityServerBuilder = builder.Services.AddIdentityServer();
+
+#if DEBUG
+{
+    m_IdentityServerBuilder.CMX_ConfigurarDEBUG();
+}
+#else
+{
+    m_IdentityServerBuilder.CMX_ConfigurarRELEASE();
+}
+#endif
 
 var app = builder.Build();
 
@@ -39,7 +49,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-await app.MigrationExtensionAsync();
+#if !DEBUG
+{
+    await app.MigrationExtensionAsync();
+}
+#endif
 
 //app.UseHttpsRedirection();
 

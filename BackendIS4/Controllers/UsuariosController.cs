@@ -1,4 +1,7 @@
-﻿namespace BackendIS4.Controllers;
+﻿using IdentityModel.Client;
+using System.IdentityModel.Tokens.Jwt;
+
+namespace BackendIS4.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,30 +17,38 @@ public class UsuariosController : Controller, IUsuariosController
     [HttpPost]
     public async Task<string> Create(RegistrarUsuarioDTO user)
     {
-        var novoUser = new IdentityUser(user.Nome)
+        var novoUser = new IdentityUser(user.Nome!)
         {
             Email = user.Email,
             PhoneNumber = user.Telefone
         };
 
-        var result = await _UserManager.CreateAsync(novoUser, user.Senha);
+        var result = await _UserManager.CreateAsync(novoUser, user.Senha!);
         if(result.Errors.Any())
             throw new Exception(result.ToString());
 
         return result.ToString();
     }
 
+    //[Authorize(Policy = "Administrador")]
+
+    [HttpGet("todos")]
+    public IEnumerable<IdentityUser> Read() => _UserManager.Users;
+
     [HttpGet]
-    public async Task<IEnumerable<IdentityUser>> Read(string? name)
+    public async Task<IdentityUser> Read(string? name)
     {
-        var users = new List<IdentityUser>();
+        var m_Usuario = new IdentityUser();
 
         if (string.IsNullOrWhiteSpace(name))
-            users = _UserManager.Users.ToList();
+            throw new ArgumentNullException(nameof(name));
         else
-            users.Add(await _UserManager.FindByNameAsync(name));
+            m_Usuario = await _UserManager.FindByNameAsync(name);
 
-        return users;
+        if (m_Usuario == null)
+            throw new Exception("Nenhum usuário encontrado!");
+
+        return m_Usuario;
     }
 
     [HttpPut]
