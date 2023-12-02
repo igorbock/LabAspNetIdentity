@@ -1,7 +1,4 @@
-﻿using IdentityModel.Client;
-using System.IdentityModel.Tokens.Jwt;
-
-namespace BackendIS4.Controllers;
+﻿namespace BackendIS4.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -23,9 +20,16 @@ public class UsuariosController : Controller, IUsuariosController
             PhoneNumber = user.Telefone
         };
 
+        var m_NumeroUsuarios = _UserManager.Users.Count();
+        ++m_NumeroUsuarios;
+        var m_NumeroMatricula = m_NumeroUsuarios.ToString().PadLeft(6, '0');
+        var m_Matricula = new Claim("matricula", m_NumeroMatricula, typeof(string).Name);
+
         var result = await _UserManager.CreateAsync(novoUser, user.Senha!);
         if(result.Errors.Any())
             throw new Exception(result.ToString());
+
+        await _UserManager.AddClaimAsync(novoUser, m_Matricula);
 
         return result.ToString();
     }
