@@ -14,9 +14,6 @@ public static class IServiceScopeExtension
             ConfirmaSenha = m_Configuracao["Usuario:ConfirmaSenha"]
         };
 
-        if (m_UsuarioADM.Nome != "Administrador")
-            throw new JsonException();
-
         return m_UsuarioADM;
     }
 }

@@ -2,6 +2,7 @@
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UsuarioController : Controller
 {
     public UserManager<IdentityUser> C_UserManager { get; set; }
@@ -12,6 +13,7 @@ public class UsuarioController : Controller
     }
 
     [HttpPost]
+    [Authorize(Policy = "Administrador")]
     public async Task<string> Create(RegistrarUsuarioDTO user)
     {
         var novoUser = new IdentityUser(user.Nome!)
@@ -35,12 +37,15 @@ public class UsuarioController : Controller
     }
 
     [HttpGet("todos")]
+    [Authorize(Policy = "Administrador")]
     public IEnumerable<IdentityUser> Read() => C_UserManager.Users;
 
     [HttpGet("id")]
+    [Authorize(Policy = "Administrador")]
     public async Task<IdentityUser> CM_ObterUsuarioPorID(string p_Id) => await C_UserManager.FindByIdAsync(p_Id) ?? throw new KeyNotFoundException();
 
     [HttpGet]
+    [Authorize(Policy = "Administrador")]
     public async Task<IdentityUser> Read(string? name)
     {
         var m_Usuario = new IdentityUser();
@@ -65,6 +70,7 @@ public class UsuarioController : Controller
     }
 
     [HttpPut]
+    [Authorize(Policy = "Administrador")]
     public async Task<string> Update(IdentityUser user)
     {
         var result = await C_UserManager.UpdateAsync(user);
@@ -72,6 +78,7 @@ public class UsuarioController : Controller
     }
 
     [HttpDelete]
+    [Authorize(Policy = "Administrador")]
     public async Task<string> Delete(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -84,6 +91,7 @@ public class UsuarioController : Controller
     }
 
     [HttpDelete("desativar")]
+    [Authorize(Policy = "Administrador")]
     public async Task<string> Desativar(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -96,6 +104,7 @@ public class UsuarioController : Controller
     }
 
     [HttpPost("ativar")]
+    [Authorize(Policy = "Administrador")]
     public async Task<string> Ativar(string name, string p_Senha)
     {
         if (string.IsNullOrWhiteSpace(name))
