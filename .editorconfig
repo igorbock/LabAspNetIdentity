@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS8625: Não é possível converter um literal nulo em um tipo de referência não anulável.
+dotnet_diagnostic.CS8625.severity = silent

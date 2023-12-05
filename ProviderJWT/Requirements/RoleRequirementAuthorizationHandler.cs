@@ -4,8 +4,9 @@ public class RoleRequirementAuthorizationHandler : AuthorizationHandler<RoleRequ
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RoleRequirement requirement)
     {
-        if (context.User.Claims.Where(a => a.Value.Equals(requirement.C_Role)).Any())
-            context.Succeed(requirement);
+        foreach(var item in requirement.C_Role!)
+            if (context.User.Claims.Where(a => a.Value.Equals(item)).Any())
+                context.Succeed(requirement);
 
         return Task.CompletedTask;
     }

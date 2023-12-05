@@ -7,6 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorIS4", "BlazorIS4\Blaz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProviderJWT", "ProviderJWT\ProviderJWT.csproj", "{4C845B56-D9A6-410F-8931-F78501D7BBF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestesProviderJWT", "TestesProviderJWT\TestesProviderJWT.csproj", "{8CEECEA6-D6BB-4308-B0EE-F7639CF5AACD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3D4DD68B-89E4-4E99-8248-D678E4D16586}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +28,10 @@ Global
 		{4C845B56-D9A6-410F-8931-F78501D7BBF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C845B56-D9A6-410F-8931-F78501D7BBF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C845B56-D9A6-410F-8931-F78501D7BBF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CEECEA6-D6BB-4308-B0EE-F7639CF5AACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CEECEA6-D6BB-4308-B0EE-F7639CF5AACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CEECEA6-D6BB-4308-B0EE-F7639CF5AACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CEECEA6-D6BB-4308-B0EE-F7639CF5AACD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

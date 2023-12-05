@@ -45,6 +45,8 @@ builder.Services.AddSwaggerGen(swagger =>
 
 // Add services to the container.
 builder.Services.AddSingleton<IConfiguration>(m_Configuracao);
+builder.Services.AddScoped<IMatriculaHelper, MatriculaHelper>();
+builder.Services.AddScoped<IUsuariosService, UsuariosService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseNpgsql(m_Configuracao["DefaultConnectionString"]));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -76,12 +78,15 @@ builder.Services.AddAuthentication(opt =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Administrador", policy => policy.Requirements.Add(new RoleRequirement("ADM")));
+    options.AddPolicy("Administrador", policy => policy.Requirements.Add(new RoleRequirement(["ADM"])));
+    options.AddPolicy("Professor", policy => policy.Requirements.Add(new RoleRequirement(["PROFESSOR", "ADM"])));
 });
 
 var app = builder.Build();
 
-await app.MigrationExtensionAsync();
+using var m_IServiceScope = app.Services.CMX_ObterIServiceScope();
+m_IServiceScope.CMX_MigrarBancoDeDados();
+await m_IServiceScope.CMX_MigrarUsuarioADMAsync();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

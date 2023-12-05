@@ -5,35 +5,35 @@
 [Authorize]
 public class UsuarioController : Controller
 {
-    public UserManager<IdentityUser> C_UserManager { get; set; }
+    public UserManager<IdentityUser> C_UserManager { get; private set; }
+    public RoleManager<IdentityRole> C_RoleManager { get; private set; }
+    public IUsuariosService? C_UsuariosService { get; private set; }
 
-    public UsuarioController(UserManager<IdentityUser> p_UserManager)
+    public UsuarioController(
+        UserManager<IdentityUser> p_UserManager, 
+        RoleManager<IdentityRole> p_RoleManager, 
+        IUsuariosService? p_UsuariosService)
     {
         C_UserManager = p_UserManager;
+        C_RoleManager = p_RoleManager;
+        C_UsuariosService = p_UsuariosService;
     }
 
-    [HttpPost]
+    [HttpPost("professor")]
     [Authorize(Policy = "Administrador")]
-    public async Task<string> Create(RegistrarUsuarioDTO user)
+    public async Task<string> CM_CriarProfessor(RegistrarUsuarioDTO p_UsuarioDTO)
     {
-        var novoUser = new IdentityUser(user.Nome!)
-        {
-            Email = user.Email,
-            PhoneNumber = user.Telefone
-        };        
+        var m_IdentityUser = new IdentityUser(p_UsuarioDTO.Nome!);
+        return await C_UsuariosService!.CM_CriarProfessorAsync(m_IdentityUser, p_UsuarioDTO);
+    }
+        
 
-        var m_NumeroUsuarios = C_UserManager.Users.Count();
-        ++m_NumeroUsuarios;
-        var m_NumeroMatricula = m_NumeroUsuarios.ToString().PadLeft(6, '0');
-        var m_Matricula = new Claim("matricula", m_NumeroMatricula, typeof(string).Name);
-
-        var result = await C_UserManager.CreateAsync(novoUser, user.Senha!);
-        if (result.Errors.Any())
-            throw new Exception(result.ToString());
-
-        await C_UserManager.AddClaimAsync(novoUser, m_Matricula);
-
-        return result.ToString();
+    [HttpPost("aluno")]
+    [Authorize(Policy = "Professor")]
+    public async Task<string> CM_CriarAluno(RegistrarUsuarioDTO p_UsuarioDTO)
+    {
+        var m_IdentityUser = new IdentityUser(p_UsuarioDTO.Nome!);
+        return await C_UsuariosService!.CM_CriarAlunoAsync(m_IdentityUser, p_UsuarioDTO);
     }
 
     [HttpGet("todos")]
