@@ -10,8 +10,8 @@ public class UsuarioController : Controller
     public IUsuariosService? C_UsuariosService { get; private set; }
 
     public UsuarioController(
-        UserManager<IdentityUser> p_UserManager, 
-        RoleManager<IdentityRole> p_RoleManager, 
+        UserManager<IdentityUser> p_UserManager,
+        RoleManager<IdentityRole> p_RoleManager,
         IUsuariosService? p_UsuariosService)
     {
         C_UserManager = p_UserManager;
@@ -21,27 +21,23 @@ public class UsuarioController : Controller
 
     [HttpPost("professor")]
     [Authorize(Policy = "Administrador")]
-    public async Task<string> CM_CriarProfessor(RegistrarUsuarioDTO p_UsuarioDTO)
+    public async Task<string> CM_CriarProfessor([FromBody] RegistrarUsuarioDTO p_UsuarioDTO)
     {
         var m_IdentityUser = new IdentityUser(p_UsuarioDTO.Nome!);
         return await C_UsuariosService!.CM_CriarProfessorAsync(m_IdentityUser, p_UsuarioDTO);
     }
-        
+
 
     [HttpPost("aluno")]
     [Authorize(Policy = "Professor")]
-    public async Task<string> CM_CriarAluno(RegistrarUsuarioDTO p_UsuarioDTO)
+    public async Task<string> CM_CriarAluno([FromBody] RegistrarUsuarioDTO p_UsuarioDTO)
     {
         var m_IdentityUser = new IdentityUser(p_UsuarioDTO.Nome!);
         return await C_UsuariosService!.CM_CriarAlunoAsync(m_IdentityUser, p_UsuarioDTO);
     }
 
-    [HttpGet("todos")]
-    [Authorize(Policy = "Administrador")]
-    public IEnumerable<IdentityUser> Read() => C_UserManager.Users;
-
     [HttpGet("id")]
-    [Authorize(Policy = "Administrador")]
+    [Authorize(Policy = "Professor")]
     public async Task<IdentityUser> CM_ObterUsuarioPorID(string p_Id) => await C_UserManager.FindByIdAsync(p_Id) ?? throw new KeyNotFoundException();
 
     [HttpGet]
@@ -128,4 +124,12 @@ public class UsuarioController : Controller
         var m_Claim = new Claim(p_NomeClaim, p_ValorClaim);
         return await C_UserManager.GetUsersForClaimAsync(m_Claim);
     }
+
+    [HttpGet("alunos")]
+    [Authorize("Professor")]
+    public async Task<IEnumerable<AlunoDTO>> CM_ObterAlunos(string? p_Nome) => await C_UsuariosService!.CM_ObterAlunosAsync(p_Nome);
+
+    [HttpGet("professores")]
+    [Authorize(Policy = "Administrador")]
+    public async Task<IEnumerable<UsuarioDTO>> CM_ObterProfessores(string? p_Nome) => await C_UsuariosService!.CM_ObterProfessoresAsync(p_Nome);
 }

@@ -32,7 +32,9 @@ public class TokenController : Controller
         var m_Claims = await C_UserManager.GetClaimsAsync(m_Usuario);
         var m_Roles = await C_UserManager.GetRolesAsync(m_Usuario);
         foreach (var item in m_Roles)
-            m_Claims.Add(new Claim("roles", item));
+            m_Claims.Add(new Claim(ClaimTypes.Role, item));
+
+        m_Claims.Add(new Claim(ClaimTypes.Name, m_Usuario.UserName!));
 
         var m_Retorno = cm_GerarJWT(m_Claims);
 

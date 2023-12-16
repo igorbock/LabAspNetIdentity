@@ -1,9 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
-var m_Configuracao = new ConfigurationBuilder()
-    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-    .Build();
+#if !DEBUG
+builder.WebHost.UseUrls("http://*:8080");
+#else
+builder.WebHost.UseUrls("https://localhost:7121");
+#endif
 
 //Configurando serialização
 builder.Services.AddControllers().AddJsonOptions(opt =>
@@ -44,16 +45,17 @@ builder.Services.AddSwaggerGen(swagger =>
 });
 
 // Add services to the container.
-builder.Services.AddSingleton<IConfiguration>(m_Configuracao);
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddScoped<IMatriculaHelper, MatriculaHelper>();
 builder.Services.AddScoped<IUsuariosService, UsuariosService>();
+builder.Services.AddScoped<IClaimsService, ClaimsService>();
+builder.Services.AddScoped<IRolesService, RolesService>();
+builder.Services.AddScoped<IUsuarioService<UsuarioDTO>, AlunoService>();
 
-builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseNpgsql(m_Configuracao["DefaultConnectionString"]));
+builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
-
-builder.Services.AddSingleton<IAuthorizationHandler, RoleRequirementAuthorizationHandler>();
 
 builder.Services.AddAuthentication(opt =>
     {
@@ -70,19 +72,26 @@ builder.Services.AddAuthentication(opt =>
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
 
-            ValidIssuer = m_Configuracao["Jwt:Issuer"],
-            ValidAudience = m_Configuracao["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(m_Configuracao["Jwt:Key"]!))
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
     });
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Administrador", policy => policy.Requirements.Add(new RoleRequirement(["ADM"])));
-    options.AddPolicy("Professor", policy => policy.Requirements.Add(new RoleRequirement(["PROFESSOR", "ADM"])));
+    options.AddPolicy("Administrador", policy => policy.RequireRole(["ADM"]));
+    options.AddPolicy("Professor", policy => policy.RequireRole(["PROFESSOR"]));
 });
 
 var app = builder.Build();
+
+app.UseCors(cors =>
+{
+    cors.AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin();
+});
 
 using var m_IServiceScope = app.Services.CMX_ObterIServiceScope();
 m_IServiceScope.CMX_MigrarBancoDeDados();
