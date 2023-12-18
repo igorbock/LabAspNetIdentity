@@ -31,4 +31,15 @@ public class AlunoController : Controller
 
     [HttpGet("temsenha")]
     public async Task<Tuple<bool, string>> CM_AlunoPossuiSenha(string p_Nome) => await C_AlunoService!.CM_UsuarioPossuiSenhaAsync(p_Nome);
+
+    [HttpDelete]
+    public async Task CM_DesativarAluno(string p_Nome)
+    {
+        var m_Alunos = await C_AlunoService!.CM_ObterUsuariosAsync(p_Nome);
+        var m_Aluno = m_Alunos.SingleOrDefault();
+        await C_AlunoService!.CM_AtivarOuDesativarUsuarioAsync(m_Aluno!);
+    }
+
+    [HttpPut]
+    public async Task CM_AlterarTelefone(UsuarioDTO p_Usuario) => await C_AlunoService!.CM_AlterarTelefoneUsuarioAsync(p_Usuario);
 }

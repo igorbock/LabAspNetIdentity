@@ -104,19 +104,40 @@ public class AlunoService : IUsuarioService<UsuarioDTO>
 #pragma warning restore CA1416 // Validar a compatibilidade da plataforma
     }
 
-    public async Task CM_DesativarUsuarioAsync(UsuarioDTO p_Usuario)
+    public async Task CM_AtivarOuDesativarUsuarioAsync(UsuarioDTO p_Usuario)
     {
         var m_Usuario = await C_UserManager!.FindByIdAsync(p_Usuario.Id!) ?? throw new KeyNotFoundException(nameof(p_Usuario.Id));
+        var m_UsuarioAtivo = await C_UserManager.HasPasswordAsync(m_Usuario);
+        if (m_UsuarioAtivo == false)
+            return;
+
+        var m_Logins = await C_UserManager.GetLoginsAsync(m_Usuario);
+        foreach (var item in m_Logins)
+            await C_UserManager.RemoveLoginAsync(m_Usuario, item.LoginProvider, item.ProviderKey);
+
         var m_Resultado = await C_UserManager!.RemovePasswordAsync(m_Usuario);
         if (m_Resultado.Succeeded == false)
             throw new Exception(m_Resultado.Errors.ToString());
     }
 
     public async Task<Tuple<bool, string>> CM_UsuarioPossuiSenhaAsync(string p_Nome)
-    {        
+    {
         var m_Usuario = await C_UserManager!.FindByNameAsync(p_Nome) ?? throw new KeyNotFoundException(nameof(p_Nome));
         var m_PossuiSenha = await C_UserManager!.HasPasswordAsync(m_Usuario);
         var m_Claims = await C_UserManager!.GetClaimsAsync(m_Usuario);
+        var m_ExisteMatricula = m_Claims.Where(a => a.Type.Equals("matricula")).Any();
+        if (m_ExisteMatricula == false)
+            return new Tuple<bool, string>(m_PossuiSenha, "EhProfessor");
+
         return new Tuple<bool, string>(m_PossuiSenha, m_Claims.First(a => a.Type.Equals("matricula")).Value);
+    }
+
+    public async Task CM_AlterarTelefoneUsuarioAsync(UsuarioDTO p_Usuario)
+    {
+        var m_Usuario = await C_UserManager!.FindByNameAsync(p_Usuario.Nome!) ?? throw new KeyNotFoundException(nameof(p_Usuario.Nome));
+        var m_Token = await C_UserManager.GenerateChangePhoneNumberTokenAsync(m_Usuario, p_Usuario.Telefone!);
+        var m_Resultado = await C_UserManager!.ChangePhoneNumberAsync(m_Usuario, p_Usuario.Telefone!, m_Token);
+        if (m_Resultado.Succeeded == false)
+            throw new Exception(m_Resultado.Errors.ToString());
     }
 }

@@ -73,6 +73,7 @@ public class UsuariosService : IUsuariosService
             if (m_Role == null) continue;
             var m_Usuario = m_Usuarios.Find(a => a.Id.Equals(item.UserId));
             var m_Claim = m_UserClaims.Find(a => a.UserId.Equals(item.UserId));
+            var m_Ativo = await C_UserManager!.HasPasswordAsync(m_Usuario!);
             m_Retorno.Add(new AlunoDTO
             {
                 Id = m_Usuario!.Id,
@@ -80,7 +81,8 @@ public class UsuariosService : IUsuariosService
                 Email = m_Usuario.Email,
                 Telefone = m_Usuario.PhoneNumber,
                 Cargo = m_Role!.Name,
-                Matricula = int.Parse(m_Claim!.ClaimValue!)
+                Matricula = int.Parse(m_Claim!.ClaimValue!),
+                Ativo = m_Ativo
             });
         }
 

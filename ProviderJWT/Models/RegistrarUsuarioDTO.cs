@@ -47,16 +47,16 @@ public class RegistrarUsuarioDTO
     }
     
     [Required(ErrorMessage = "O campo 'Telefone' é obrigatório")]
-    [RegularExpression("^[(][0-9]{2}[)][9][0-9]{4}[-][0-9]{4}$")]
+    //[RegularExpression("^[(][0-9]{2}[)][9][0-9]{4}[-][0-9]{4}$")]
     public string? Telefone
     {
         get => telefone;
         set
         {
             if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(Telefone), "O campo 'Telefone' é obrigatório");
-            var m_Validacao = Regex.Match(value, "^[(][0-9]{2}[)][9][0-9]{4}[-][0-9]{4}$");
-            if (m_Validacao.Success == false)
-                throw new ArgumentException("O campo 'Telefone' deve ser como o correspondente: (xx)9xxxx-xxxx", nameof(Telefone));
+            //var m_Validacao = Regex.Match(value, @"(?:^\([0]?[1-9]{2}\)|^[0]?[1-9]{2}[\.-\\s]?)[9]?[1-9]\d{3}[\.-\\s]?\d{4}$");
+            //if (m_Validacao.Success == false)
+            //    throw new ArgumentException("O campo 'Telefone' deve ser como o correspondente: (xx)9xxxx-xxxx", nameof(Telefone));
 
             telefone = value;
         }

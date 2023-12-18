@@ -8,4 +8,5 @@ public record AlunoDTO
     public string? Telefone { get; init; }
     public string? Cargo { get; init; }
     public int? Matricula { get; init; }
+    public bool? Ativo { get; set; }
 }
