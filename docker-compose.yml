@@ -1,13 +1,5 @@
 version: '3.8'
 services:
-  lab_academia_asp_net_identity:
-    container_name: lab_academia_asp_net_identity
-    build: ./ProviderJWT    
-    ports:
-      - "6000:8080"    
-    depends_on:
-      - asp_net_identity_postgres
-    
   asp_net_identity_postgres:
     container_name: asp_net_identity_postgres
     image: postgres:latest
@@ -22,12 +14,20 @@ services:
     volumes:
       - /var/lib/postgresql:/var/lib/postgresql
 
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    container_name: swagger_ui_container
+  lab_academia_asp_net_identity:
+    container_name: lab_academia_asp_net_identity
+    build: ./ProviderJWT    
     ports:
-      - "80:8080"
-    volumes:
-      - ./doc:/usr/share/nginx/html/doc
-    environment:
-      SWAGGER_JSON_URL: http://lab_academia_asp_net_identity:8080/swagger/v1/swagger.json
+      - "6000:8080"    
+    depends_on:
+      - asp_net_identity_postgres
+
+  # swagger-ui:
+  #   image: swaggerapi/swagger-ui
+  #   container_name: swagger_ui_container
+  #   ports:
+  #     - "80:8080"
+  #   volumes:
+  #     - ./doc:/usr/share/nginx/html/doc
+  #   environment:
+  #     SWAGGER_JSON_URL: http://lab_academia_asp_net_identity:8080/swagger/v1/swagger.json

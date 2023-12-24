@@ -1,10 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
-#if !DEBUG
-builder.WebHost.UseUrls("http://*:8080");
-#else
-builder.WebHost.UseUrls("https://localhost:7121");
-#endif
+//#if !DEBUG
+//builder.WebHost.UseUrls("http://*:8080");
+//#else
+//builder.WebHost.UseUrls("https://localhost:7121");
+//#endif
 
 //Configurando serialização
 builder.Services.AddControllers().AddJsonOptions(opt =>
