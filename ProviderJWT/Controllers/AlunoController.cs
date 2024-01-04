@@ -37,9 +37,12 @@ public class AlunoController : Controller
     {
         var m_Alunos = await C_AlunoService!.CM_ObterUsuariosAsync(p_Nome);
         var m_Aluno = m_Alunos.SingleOrDefault();
-        await C_AlunoService!.CM_AtivarOuDesativarUsuarioAsync(m_Aluno!);
+        await C_AlunoService!.CM_DesativarUsuarioAsync(m_Aluno!);
     }
 
     [HttpPut]
     public async Task CM_AlterarTelefone(UsuarioDTO p_Usuario) => await C_AlunoService!.CM_AlterarTelefoneUsuarioAsync(p_Usuario);
+
+    [HttpPost("senha")]
+    public async Task CM_AtribuirSenha(RegistrarSenhaDTO p_DTO) => await C_AlunoService!.CM_AtribuirSenhaAoUsuario(p_DTO);
 }

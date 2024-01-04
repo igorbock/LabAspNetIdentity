@@ -104,7 +104,7 @@ public class AlunoService : IUsuarioService<UsuarioDTO>
 #pragma warning restore CA1416 // Validar a compatibilidade da plataforma
     }
 
-    public async Task CM_AtivarOuDesativarUsuarioAsync(UsuarioDTO p_Usuario)
+    public async Task CM_DesativarUsuarioAsync(UsuarioDTO p_Usuario)
     {
         var m_Usuario = await C_UserManager!.FindByIdAsync(p_Usuario.Id!) ?? throw new KeyNotFoundException(nameof(p_Usuario.Id));
         var m_UsuarioAtivo = await C_UserManager.HasPasswordAsync(m_Usuario);
@@ -139,5 +139,14 @@ public class AlunoService : IUsuarioService<UsuarioDTO>
         var m_Resultado = await C_UserManager!.ChangePhoneNumberAsync(m_Usuario, p_Usuario.Telefone!, m_Token);
         if (m_Resultado.Succeeded == false)
             throw new Exception(m_Resultado.Errors.ToString());
+    }
+
+    public async Task<string> CM_AtribuirSenhaAoUsuario(RegistrarSenhaDTO p_DTO)
+    {
+        var m_Matricula = new Claim("matricula", p_DTO.C_Matricula!);
+        var m_Usuarios = await C_UserManager!.GetUsersForClaimAsync(m_Matricula);
+        var m_Usuario = m_Usuarios.SingleOrDefault();
+        var m_Resultado = await C_UserManager.AddPasswordAsync(m_Usuario!, p_DTO.C_Senha!);
+        return m_Resultado.ToString();
     }
 }

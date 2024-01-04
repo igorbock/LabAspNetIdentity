@@ -1,11 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
 
-//#if !DEBUG
-//builder.WebHost.UseUrls("http://*:8080");
-//#else
-//builder.WebHost.UseUrls("https://localhost:7121");
-//#endif
-
 //Configurando serialização
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {
@@ -52,7 +46,11 @@ builder.Services.AddScoped<IClaimsService, ClaimsService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IUsuarioService<UsuarioDTO>, AlunoService>();
 
+#if DEBUG
+builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseNpgsql("Host=localhost;Port=5432;Database=jwt;User Id=postgres;Password=teste"));
+#else
 builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+#endif
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
