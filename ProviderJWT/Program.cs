@@ -91,9 +91,9 @@ app.UseCors(cors =>
         .AllowAnyOrigin();
 });
 
-using var m_IServiceScope = app.Services.CMX_ObterIServiceScope();
-m_IServiceScope.CMX_MigrarBancoDeDados();
-await m_IServiceScope.CMX_MigrarUsuarioADMAsync();
+//using var m_IServiceScope = app.Services.CMX_ObterIServiceScope();
+//m_IServiceScope.CMX_MigrarBancoDeDados();
+//await m_IServiceScope.CMX_MigrarUsuarioADMAsync();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
