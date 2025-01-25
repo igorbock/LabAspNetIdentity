@@ -6,7 +6,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddScoped<IShieldJWT, ShieldJWTLib.ShieldJWT>();
+builder.Services.AddScoped<ShieldJWTAbstract, ShieldJWTLib.ShieldJWT>();
 
 var app = builder.Build();
 
