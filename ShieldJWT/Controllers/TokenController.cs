@@ -2,7 +2,7 @@
 
 [ApiController]
 [Route("[controller]")]
-public class TokenController : ControllerBase
+public class TokenController : ShieldController
 {
     private readonly ShieldJWTAbstract _shieldJWT;
 
@@ -11,8 +11,9 @@ public class TokenController : ControllerBase
         _shieldJWT = shieldJWT;
     }
 
+    [HttpPost]
     public IActionResult GenerateToken(TokenRequest request)
     {
-        
+        return Ok();
     }
 }

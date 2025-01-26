@@ -14,4 +14,8 @@
     <ProjectReference Include="..\ShieldJWTLib\ShieldJWTLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+  </ItemGroup>
+
 </Project>
