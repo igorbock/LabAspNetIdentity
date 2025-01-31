@@ -12,9 +12,9 @@ namespace ShieldJWTLib
     {
         public ShieldJWT() : base("ShieldJWT", "a890597f580476d70368bd4c40081dc1bd6f6fb76512318f0fe92929f8cb2720") { }
 
-        public string GenerateJWT(IEnumerable<Claim> claims = null)
+        public override string GenerateToken(string audience, IEnumerable<Claim> claims = null)
         {
-            if (string.IsNullOrEmpty(Audience))
+            if (string.IsNullOrEmpty(audience))
                 throw new ArgumentNullException(nameof(Audience));
 
             var expiration = DateTime.UtcNow.AddMinutes(60);

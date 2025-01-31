@@ -14,6 +14,8 @@ public class TokenController : ShieldController
     [HttpPost]
     public IActionResult GenerateToken(TokenRequest request)
     {
-        return Ok();
+        var token = _shieldJWT.GenerateToken(request.Audience);
+
+        return Ok(token);
     }
 }
