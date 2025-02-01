@@ -1,13 +1,13 @@
 ﻿namespace ShieldJWT.Controllers;
 
-public class ShieldController : ControllerBase
+public abstract class ShieldController : ControllerBase
 {
     [NonAction]
-    public ObjectResult Handler(Action method)
+    public IActionResult Handler<SendType1, SendType2, ReturnType>(Func<SendType1, SendType2, ReturnType> method, SendType1 param1, SendType2 param2)
     {
         try
         {
-            var methodReturn = method.DynamicInvoke();
+            var methodReturn = method.Invoke(param1, param2);
             return StatusCode(200, methodReturn);
         }
         catch (Exception ex)
