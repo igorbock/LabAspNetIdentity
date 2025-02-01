@@ -1,6 +1,6 @@
 ﻿namespace ShieldJWT.Controllers;
 
-public abstract class ShieldController : ControllerBase
+public abstract class ShieldControllerAbstract : ControllerBase
 {
     [NonAction]
     public IActionResult Handler<SendType1, SendType2, ReturnType>(Func<SendType1, SendType2, ReturnType> method, SendType1 param1, SendType2 param2)

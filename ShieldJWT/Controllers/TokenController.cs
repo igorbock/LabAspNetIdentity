@@ -2,11 +2,11 @@
 
 [ApiController]
 [Route("[controller]")]
-public class TokenController : ShieldController
+public class TokenController : ShieldControllerAbstract
 {
-    private readonly ShieldJWTAbstract _shieldJWT;
+    private readonly TokenServiceAbstract _shieldJWT;
 
-    public TokenController(ShieldJWTAbstract shieldJWT)
+    public TokenController(TokenServiceAbstract shieldJWT)
     {
         _shieldJWT = shieldJWT;
     }
