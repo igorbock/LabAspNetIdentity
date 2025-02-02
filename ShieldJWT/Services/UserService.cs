@@ -84,29 +84,29 @@ public class UserService : IShieldUser
         }
     }
 
-    public ShieldReturnType Create(string email, string username, string newPassword)
+    public ShieldReturnType Create(CreateUser newUser)
     {
         try
         {
-            if (_dbContext.Users.Any(a => a.Email == email))
+            if (_dbContext.Users.Any(a => a.Email == newUser.Email))
                 throw new Exception("O e-mail informado é incorreto");
 
-            if (_dbContext.Users.Any(a => a.Username == username))
+            if (_dbContext.Users.Any(a => a.Username == newUser.Username))
                 throw new Exception("O nome de usuário não está disponível");
 
-            var newUser = new User
+            var user = new User
             {
-                Email = email,
-                Username = username,
+                Email = newUser.Email,
+                Username = newUser.Username,
                 EmailConfirmed = false
             };
 
-            var newHash = _passwordHasher.HashPassword(newUser, newPassword);
-            newUser.Hash = newHash;
+            var newHash = _passwordHasher.HashPassword(user, newUser.Password);
+            user.Hash = newHash;
 
             var newAccount = new ChangedPassword
             {
-                Email = email,
+                Email = newUser.Email,
                 Date = DateTime.UtcNow,
                 NewHash = newHash,
                 Confirmed = false
@@ -124,9 +124,9 @@ public class UserService : IShieldUser
             _dbContext.ChangedPasswords!.Add(newAccount);
             _dbContext.SaveChanges();
 
-            _mailService.SendConfirmCodeTo(email, username, "", "Confirmação de nova conta - Shield JWT");
+            _mailService.SendConfirmCodeTo(newUser.Email, newUser.Username, "", "Confirmação de nova conta - Shield JWT");
 
-            return new ShieldReturnType();
+            return new ShieldReturnType($"Usuário criado com sucesso. Confirme o código enviado no e-mail '{newUser.Email}'");
         }
         catch (Exception ex)
         {

@@ -15,4 +15,18 @@ public abstract class ShieldControllerAbstract : ControllerBase
             return StatusCode(500, ex);
         }
     }
+
+    [NonAction]
+    public IActionResult Handler<SendType1, ReturnType>(Func<SendType1, ReturnType> method, SendType1 param1)
+    {
+        try
+        {
+            var methodReturn = method.Invoke(param1);
+            return StatusCode(200, methodReturn);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex);
+        }
+    }
 }
