@@ -14,3 +14,7 @@ global using ShieldJWTLib.Abstract;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Identity;
+
+global using MimeKit;
+
+global using MailKit.Net.Smtp;

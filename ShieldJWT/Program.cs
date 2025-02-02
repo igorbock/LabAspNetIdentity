@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddSingleton<IConfiguration>(configuration);
+
 builder.Services.AddScoped<TokenServiceAbstract, TokenService>();
 builder.Services.AddScoped<IShieldUser, UserService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordService>();

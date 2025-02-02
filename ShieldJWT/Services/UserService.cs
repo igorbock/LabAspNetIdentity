@@ -1,4 +1,6 @@
-﻿namespace ShieldJWT.Services;
+﻿using ShieldJWTLib.Models;
+
+namespace ShieldJWT.Services;
 
 public class UserService : IShieldUser
 {
@@ -6,10 +8,11 @@ public class UserService : IShieldUser
     private readonly IShieldMail _mailService;
     private readonly ShieldDbContext _dbContext;
 
-    public UserService(IPasswordHasher<User> passwordHasher, ShieldDbContext dbContext)
+    public UserService(IPasswordHasher<User> passwordHasher, ShieldDbContext dbContext, IShieldMail mailService)
     {
         _passwordHasher = passwordHasher;
         _dbContext = dbContext;
+        _mailService = mailService;
     }
 
     public ShieldReturnType ChangePassword(string email, string newPassword)
@@ -41,7 +44,7 @@ public class UserService : IShieldUser
 
             _dbContext.ChangedPasswords!.Add(changedPassword);
             _dbContext.SaveChanges();
-            //_mailService.SendConfirmCodeTo(user.Pessoa!.Email!, user.Pessoa!.Nome!, stringCode);
+            _mailService.SendConfirmCodeTo(user.Email, user.Username, stringCode, "Confirmação de alteração de senha - Shield JWT");
 
             return new ShieldReturnType(user.Email);
         }
@@ -85,17 +88,43 @@ public class UserService : IShieldUser
     {
         try
         {
+            if (_dbContext.Users.Any(a => a.Email == email))
+                throw new Exception("O e-mail informado é incorreto");
+
+            if (_dbContext.Users.Any(a => a.Username == username))
+                throw new Exception("O nome de usuário não está disponível");
+
             var newUser = new User
             {
                 Email = email,
-                Username = username
+                Username = username,
+                EmailConfirmed = false
             };
-            newUser.Hash = _passwordHasher.HashPassword(newUser, newPassword);
+
+            var newHash = _passwordHasher.HashPassword(newUser, newPassword);
+            newUser.Hash = newHash;
+
+            var newAccount = new ChangedPassword
+            {
+                Email = email,
+                Date = DateTime.UtcNow,
+                NewHash = newHash,
+                Confirmed = false
+            };
+
+            var byteFill = new byte[4];
+            using var random = RandomNumberGenerator.Create();
+            random.GetBytes(byteFill);
+            var newCode = Math.Abs(BitConverter.ToInt32(byteFill, 0) % 1000000);
+            var stringCode = newCode.ToString("D6");
+
+            newAccount.ConfimationCode = stringCode;
 
             _dbContext.Add(newUser);
+            _dbContext.ChangedPasswords!.Add(newAccount);
             _dbContext.SaveChanges();
 
-            //_mailService.SendEmail
+            _mailService.SendConfirmCodeTo(email, username, "", "Confirmação de nova conta - Shield JWT");
 
             return new ShieldReturnType();
         }

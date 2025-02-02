@@ -2,6 +2,6 @@
 {
     public interface IShieldMail
     {
-        void SendConfirmCodeTo(string email, string name, string code);
+        void SendConfirmCodeTo(string email, string name, string code, string subject);
     }
 }
