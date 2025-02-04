@@ -11,7 +11,7 @@ public class TokenController : ShieldControllerAbstract
         _shieldJWT = shieldJWT;
     }
 
-    [HttpPost]
-    public IActionResult GenerateToken(TokenRequest request)
-        => Handler<string, IEnumerable<System.Security.Claims.Claim>, string>(_shieldJWT.GenerateToken, request.Audience, null);
+    //[HttpPost]
+    //public IActionResult GenerateToken(TokenRequest request)
+    //    => Handler<string, IEnumerable<Claim>, string>(_shieldJWT.GenerateToken, request.Audience, null);
 }

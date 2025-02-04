@@ -1,5 +1,5 @@
-﻿using ShieldJWTLib.Models;
-using System.Text.RegularExpressions;
+﻿using Microsoft.EntityFrameworkCore;
+using ShieldJWTLib.Models;
 
 namespace ShieldJWT.Services;
 
@@ -8,12 +8,14 @@ public class UserService : IShieldUser
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IShieldMail _mailService;
     private readonly ShieldDbContext _dbContext;
+    private readonly TokenServiceAbstract _tokenService;
 
-    public UserService(IPasswordHasher<User> passwordHasher, ShieldDbContext dbContext, IShieldMail mailService)
+    public UserService(IPasswordHasher<User> passwordHasher, ShieldDbContext dbContext, IShieldMail mailService, TokenServiceAbstract tokenService)
     {
         _passwordHasher = passwordHasher;
         _dbContext = dbContext;
         _mailService = mailService;
+        _tokenService = tokenService;
     }
 
     public ShieldReturnType ChangePassword(string email, string newPassword)
@@ -139,5 +141,22 @@ public class UserService : IShieldUser
         {
             return new ShieldReturnType(ex.Message, 500);
         }
+    }
+
+    public ShieldReturnType Login(string username, string password)
+    {
+        var user = _dbContext.Users.First(a => a.Username == username) ?? throw new Exception("Usuário não encontrado");
+
+        if (user.EmailConfirmed == false)
+            throw new Exception("Usuário não encontrado");
+
+        var newHash = _passwordHasher.HashPassword(user, password);
+        var hash = user.Hash;
+
+        var result = _passwordHasher.VerifyHashedPassword(user, hash!, password);
+        if (result == PasswordVerificationResult.Failed)
+            throw new Exception("Usuário ou senha incorretos");
+
+        return new ShieldReturnType(_tokenService.GenerateToken(username, user.Email, "", null));
     }
 }

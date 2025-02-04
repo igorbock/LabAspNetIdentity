@@ -2,27 +2,46 @@
 
 public class TokenService : TokenServiceAbstract
 {
-    public TokenService() : base("ShieldJWT", "a890597f580476d70368bd4c40081dc1bd6f6fb76512318f0fe92929f8cb2720") { }
+    private readonly IConfiguration _configuration;
 
-    public override string GenerateToken(string audience, IEnumerable<Claim> claims = null)
+    public TokenService(IConfiguration configuration) : base(configuration["JWT:Issuer"], configuration["JWT:Key"])
+    {
+        _configuration = configuration;
+    }
+
+    public override string GenerateToken(string username, string email, string audience, IEnumerable<Claim> claims = null)
     {
         if (string.IsNullOrEmpty(audience))
             throw new ArgumentNullException(nameof(Audience));
 
-        var expiration = DateTime.UtcNow.AddMinutes(60);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
 
-        var newToken = new JwtSecurityToken(
+        if (claims == null)
+            claims = new List<Claim>();
+
+        var subject = new Claim(ClaimTypes.NameIdentifier, username);
+        var emailClaim = new Claim (ClaimTypes.Email, email);
+        claims.Append(subject);
+        claims.Append(emailClaim);
+
+
+        var jwt = new JwtSecurityToken(
             issuer: _issuer,
-            audience: Audience,
-            expires: expiration,
+            audience: audience,
+            expires: DateTime.Now.AddMinutes(60),
             claims: claims,
             signingCredentials: credentials);
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var jwt = tokenHandler.WriteToken(newToken);
-
-        return jwt;
+        try
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.WriteToken(jwt);
+            return token;
+        }
+        catch (SecurityTokenEncryptionFailedException ex)
+        {
+            return $"A criptografia do token falhou! Confira se a chave tem o mínimo de caracteres e se está correta. Erro: {ex.Message}";
+        }
     }
 }

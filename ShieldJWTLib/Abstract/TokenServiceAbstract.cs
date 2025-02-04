@@ -16,6 +16,6 @@ namespace ShieldJWTLib.Abstract
             _key = key;
         }
 
-        public abstract string GenerateToken(string audience, IEnumerable<Claim> claims = null);
+        public abstract string GenerateToken(string username, string email, string audience, IEnumerable<Claim> claims = null);
     }
 }

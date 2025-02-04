@@ -7,5 +7,6 @@ namespace ShieldJWTLib.Interfaces
         ShieldReturnType Create(CreateUser newUser);
         ShieldReturnType ChangePassword(string email, string newPassword);
         ShieldReturnType ConfirmPassword(string email, string confirmationCode);
+        ShieldReturnType Login(string username, string password);
     }
 }
