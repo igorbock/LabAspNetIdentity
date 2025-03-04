@@ -14,6 +14,7 @@ builder.Services.AddSingleton<IConfiguration>(configuration);
 
 builder.Services.AddScoped<TokenServiceAbstract, TokenService>();
 builder.Services.AddScoped<IShieldUser, UserService>();
+builder.Services.AddScoped<IShieldMail, MailService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordService>();
 
 builder.Services.AddDbContext<ShieldDbContext>(opt =>
@@ -32,6 +33,12 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseSwaggerUI(options => 
+{
+    options.RoutePrefix = "swagger";
+    options.SwaggerEndpoint("/openapi/v1.json", "OpenAPI V1");
+});
 
 app.UseHttpsRedirection();
 
