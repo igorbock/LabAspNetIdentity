@@ -4,6 +4,10 @@ Aula de autenticação com provedores externos:
 
 https://www.macoratti.net/20/07/aspnc_agoogle1.htm
 
+## Servidor ASP.NET
+
+https://www.monsterasp.net/
+
 # Autenticação com Provedores Externos
 
 Para autenticação com provedores externos como Google, Facebook e Twitter, o fluxo é um pouco diferente da autenticação tradicional com usuário e senha. Em vez de coletar as credenciais diretamente, o usuário será redirecionado para o provedor externo para autenticação, e o provedor retornará um token de acesso que você pode usar para autenticar o usuário em sua API.
