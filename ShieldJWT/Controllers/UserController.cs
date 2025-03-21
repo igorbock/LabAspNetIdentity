@@ -1,7 +1,8 @@
 ﻿namespace ShieldJWT.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
+[AllowAnonymous]
 public class UserController : ShieldControllerAbstract
 {
     private readonly IShieldUser _userService;
@@ -11,7 +12,7 @@ public class UserController : ShieldControllerAbstract
         _userService = userService;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     public IActionResult Create(CreateUser user)
         => Handler(_userService.Create, user);
 

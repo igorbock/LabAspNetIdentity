@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ShieldJWTLib.Models;
-
-namespace ShieldJWT.Services;
+﻿namespace ShieldJWT.Services;
 
 public class UserService : IShieldUser
 {
@@ -10,7 +7,11 @@ public class UserService : IShieldUser
     private readonly ShieldDbContext _dbContext;
     private readonly TokenServiceAbstract _tokenService;
 
-    public UserService(IPasswordHasher<User> passwordHasher, ShieldDbContext dbContext, IShieldMail mailService, TokenServiceAbstract tokenService)
+    public UserService(
+        IPasswordHasher<User> passwordHasher, 
+        ShieldDbContext dbContext, 
+        IShieldMail mailService, 
+        TokenServiceAbstract tokenService)
     {
         _passwordHasher = passwordHasher;
         _dbContext = dbContext;
@@ -91,17 +92,17 @@ public class UserService : IShieldUser
     {
         try
         {
-            if (_dbContext.Users.Any(a => a.Email == newUser.Email))
-                throw new Exception("O e-mail informado é incorreto");
-
-            if (_dbContext.Users.Any(a => a.Username == newUser.Username))
-                throw new Exception("O nome de usuário não está disponível");
-
             if (Regex.Match(newUser.Username, "^(?=[a-zA-Z0-9_.]{6,30}$)(?!.*\\.\\.)[a-zA-Z0-9_.]+$").Success == false)
                 throw new Exception("O nome de usuário não pode conter caracteres especiais. No mínimo 6 e no máximo 30 caracteres.");
 
             if (Regex.Match(newUser.Email, "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?").Success == false)
                 throw new Exception("O e-mail informado é incorreto");
+
+            if (_dbContext.Users.Any(a => a.Email == newUser.Email))
+                throw new Exception("O e-mail informado não está disponível");
+
+            if (_dbContext.Users.Any(a => a.Username == newUser.Username))
+                throw new Exception("O nome de usuário não está disponível");
 
             var user = new User
             {
