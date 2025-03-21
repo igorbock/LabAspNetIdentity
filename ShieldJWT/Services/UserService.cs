@@ -130,11 +130,12 @@ public class UserService : IShieldUser
 
             newAccount.ConfimationCode = stringCode;
 
-            _dbContext.Add(newUser);
-            _dbContext.ChangedPasswords!.Add(newAccount);
-            _dbContext.SaveChanges();
+            _dbContext.Add(user);
+            _dbContext.Add(newAccount);
 
             _mailService.SendConfirmCodeTo(newUser.Email, newUser.Username, "", "Confirmação de nova conta - Shield JWT");
+
+            _dbContext.SaveChanges();
 
             return new ShieldReturnType($"Usuário criado com sucesso. Confirme o código enviado no e-mail '{newUser.Email}'");
         }
