@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShieldJWTLib.Models
 {
-    [Table("usuario")]
+    [Table("user")]
     public class User
     {
         [Key]
