@@ -1,0 +1,86 @@
+name: Deploy API para MonsterASP
+
+on:
+  push:
+    branches:
+      - "master"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Escolha o ambiente (staging ou production)'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+      
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+      
+      - name: Restaurar dependências
+        run: dotnet restore
+      
+      - name: Compilar aplicação
+        run: dotnet build --configuration Release --no-restore
+      
+      - name: Publicar aplicação
+        run: |
+          if [[ "${{ github.ref }}" == *"staging"* || "${{ github.event.inputs.environment }}" == "staging" ]]; then
+            dotnet publish -c Release -o publish --property:Configuration=Staging
+          else
+            dotnet publish -c Release -o publish --property:Configuration=Production
+          fi
+      
+      - name: Upload dos artefatos
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: publish
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Baixar artefatos
+        uses: actions/download-artifact@v3
+        with:
+          name: app
+          path: app
+      
+      - name: Definir ambiente de deploy
+        run: |
+          if [[ "${{ github.ref }}" == *"staging"* || "${{ github.event.inputs.environment }}" == "staging" ]]; then
+            echo "DEPLOY_ENV=staging" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_ENV=production" >> $GITHUB_ENV
+          fi
+      
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: app/
+          server-dir: ${{ '/wwwroot' }}
+
+      # Alternativa usando SSH
+      #- name: Deploy via SSH
+      #  uses: appleboy/scp-action@v0.1.4
+      #  with:
+      #    host: ${{ secrets.SSH_HOST }}
+      #    username: ${{ secrets.SSH_USERNAME }}
+      #    password: ${{ secrets.SSH_PASSWORD }}
+      #    source: "app/*"
+      #    target: "${{ env.DEPLOY_ENV == 'staging' && '/var/www/staging/' || '/var/www/production/' }}"
