@@ -49,6 +49,9 @@ jobs:
       - name: Listar arquivos antes do upload
         run: ls -la publish
 
+      - name: Remover arquivo .exe
+        run: del "ShieldJWT.exe"
+
       - name: Upload dos artefatos
         uses: actions/upload-artifact@v4
         with:
@@ -74,7 +77,7 @@ jobs:
           fi
       
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
