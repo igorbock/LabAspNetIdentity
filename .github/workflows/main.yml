@@ -41,12 +41,6 @@ jobs:
           else
             dotnet publish -c Release -o publish --property:Configuration=Production
           fi
-      
-      - name: Upload dos artefatos
-        uses: actions/upload-artifact@v3
-        with:
-          name: app
-          path: publish
 
   deploy:
     runs-on: ubuntu-latest
