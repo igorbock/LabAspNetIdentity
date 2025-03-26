@@ -50,10 +50,10 @@ jobs:
         run: ls -la publish
           
       - name: Deploy via FTP
-        uses: GenieTim/ftp-action@v4.0.1
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.FTP_SERVER }}
-          user: ${{ secrets.FTP_USERNAME }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          localDir: publish/
-          remoteDir: /wwwroot/
+          local-dir: publish/
+          remote-dir: /wwwroot/
