@@ -29,17 +29,21 @@ jobs:
           dotnet-version: '9.0.x'
       
       - name: Restaurar dependências
-        run: dotnet restore
+        run: |
+          dotnet restore ShieldJWT/ShieldJWT.csproj
+          dotnet restore ShieldJWTLib/ShieldJWTLib.csproj
       
       - name: Compilar aplicação
-        run: dotnet build --configuration Release --no-restore
+        run: |
+          dotnet build ShieldJWT/ShieldJWT.csproj --configuration Release --no-restore
+          dotnet build ShieldJWTLib/ShieldJWTLib.csproj --configuration Release --no-restore
       
       - name: Publicar aplicação
         run: |
           if [[ "${{ github.ref }}" == *"staging"* || "${{ github.event.inputs.environment }}" == "staging" ]]; then
-            dotnet publish -c Release -o publish --property:Configuration=Staging
+            dotnet publish ShieldJWT/ShieldJWT.csproj -c Release -o publish --property:Configuration=Staging
           else
-            dotnet publish -c Release -o publish --property:Configuration=Production
+            dotnet publish ShieldJWT/ShieldJWT.csproj -c Release -o publish --property:Configuration=Production
           fi
 
   deploy:
