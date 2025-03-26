@@ -46,10 +46,25 @@ jobs:
             dotnet publish ShieldJWT/ShieldJWT.csproj -c Release -o publish --property:Configuration=Production
           fi
 
+      - name: Listar arquivos antes do upload
+        run: ls -la publish
+
+      - name: Upload dos artefatos
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: publish/
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:      
+      - name: Baixar artefatos
+        uses: actions/download-artifact@v3
+        with:
+          name: app
+          path: app
+          
       - name: Definir ambiente de deploy
         run: |
           if [[ "${{ github.ref }}" == *"staging"* || "${{ github.event.inputs.environment }}" == "staging" ]]; then
