@@ -48,12 +48,12 @@ jobs:
 
       - name: Listar arquivos antes do upload
         run: ls -la publish
-
+          
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: genietim/ftp-action@releases/v4
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
+          host: ${{ secrets.FTP_SERVER }}
+          user: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: publish/
-          server-dir: /wwwroot/
+          localDir: publish/
+          remoteDir: /wwwroot/
