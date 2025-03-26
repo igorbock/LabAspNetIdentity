@@ -50,7 +50,7 @@ jobs:
         run: ls -la publish
 
       - name: Remover arquivo .exe
-        run: rm "ShieldJWT"
+        run: rmdir "ShieldJWT"
 
       - name: Upload dos artefatos
         uses: actions/upload-artifact@v4
