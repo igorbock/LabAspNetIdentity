@@ -133,7 +133,7 @@ public class UserService : IShieldUser
             _dbContext.Add(user);
             _dbContext.Add(newAccount);
 
-            _mailService.SendConfirmCodeTo(newUser.Email, newUser.Username, "", "Confirmação de nova conta - Shield JWT");
+            _mailService.SendConfirmCodeTo(newUser.Email, newUser.Username, stringCode, "Confirmação de nova conta - Shield JWT");
 
             _dbContext.SaveChanges();
 

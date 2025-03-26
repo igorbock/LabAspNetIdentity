@@ -26,7 +26,7 @@ public class MailService : IShieldMail
         message.Body = bodyBuilder.ToMessageBody();
 
         using SmtpClient client = new SmtpClient();
-        client.Connect("smtp.gmail.com", 587, false);
+        client.Connect("smtp.office365.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
 
         client.Authenticate(_configuration["NoReply:Address"], _configuration["NoReply:Password"]);
 
