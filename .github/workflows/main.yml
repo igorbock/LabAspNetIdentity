@@ -81,6 +81,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: app/
           server-dir: /wwwroot/
+          passive: true
 
       # Alternativa usando SSH
       #- name: Deploy via SSH
