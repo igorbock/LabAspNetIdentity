@@ -47,7 +47,7 @@ jobs:
           fi
 
       - name: Listar arquivos antes do upload
-        run: ls /publish
+        run: ls -la publish
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
