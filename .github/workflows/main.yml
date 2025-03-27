@@ -51,7 +51,7 @@ jobs:
             dotnet publish ShieldJWT/ShieldJWT.csproj -c ${{ env.CONFIGURATION }} -o ./publish
 
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ env.FTP_SERVER }}
           username: ${{ env.FTP_USERNAME }}
