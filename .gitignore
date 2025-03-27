@@ -3,10 +3,10 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
-ShieldJWT/appsettings.json
-*.Development.json
-*.Staging.json
-*.Production.json
+##ShieldJWT/appsettings.json
+##*.Development.json
+##*.Staging.json
+##*.Production.json
 
 # dotenv files
 .env
