@@ -50,11 +50,26 @@ jobs:
         run: |
             dotnet publish ShieldJWT/ShieldJWT.csproj -c ${{ env.CONFIGURATION }} -o ./publish
 
-      - name: Listar arquivos antes do upload
-        run: ls -la publish
-          
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Baixar artefatos
+        uses: actions/download-artifact@v3
+        with:
+          name: app
+          path: app
+      
+      - name: Definir ambiente de deploy
+        run: |
+          if [[ "${{ github.ref }}" == *"staging"* || "${{ github.event.inputs.environment }}" == "staging" ]]; then
+            echo "DEPLOY_ENV=staging" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_ENV=production" >> $GITHUB_ENV
+          fi
+      
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
         with:
           server: ${{ env.FTP_SERVER }}
           username: ${{ env.FTP_USERNAME }}
