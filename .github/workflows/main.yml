@@ -48,7 +48,7 @@ jobs:
       
       - name: Publicar aplicação
         run: |
-            dotnet publish ShieldJWT/ShieldJWT.csproj -c ${{ env.CONFIGURATION }} -o ./publish
+            dotnet publish ShieldJWT/ShieldJWT.csproj -c ${{ env.CONFIGURATION }} -o ./publish --environment ${{ env.DEPLOY_ENV }}
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
