@@ -14,6 +14,7 @@ public class TesteController : ControllerBase
     [HttpGet]
     public IActionResult Index()
     {
-        return Ok(_configuration["Environment"]);
+        var mensagem = _configuration["Environment"] ?? "Ambiente não encontrado";
+        return Ok(mensagem);
     }
 }
