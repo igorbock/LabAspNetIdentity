@@ -58,4 +58,7 @@ jobs:
           password: ${{ env.FTP_PASSWORD }}
           local-dir: ./publish/
           server-dir: /wwwroot/
+          exclude: |
+            **/.git*/**
+            **/node_modules/**
 
