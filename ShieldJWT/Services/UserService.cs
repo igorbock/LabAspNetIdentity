@@ -23,7 +23,7 @@ public class UserService : IShieldUser
     {
         try
         {
-            var user = _dbContext.Users.FirstOrDefault(a => a.Email == email);
+            var user = _dbContext.Users.FirstOrDefault(a => a.Email == email || a.Username == email);
             if (user == null)
                 throw new Exception("Usuário não encontrado");
 
@@ -47,10 +47,11 @@ public class UserService : IShieldUser
             changedPassword.ConfimationCode = stringCode;
 
             _dbContext.ChangedPasswords!.Add(changedPassword);
-            _dbContext.SaveChanges();
             _mailService.SendConfirmCodeTo(user.Email, user.Username, stringCode, "Confirmação de alteração de senha - Shield JWT");
 
-            return new ShieldReturnType(user.Email);
+            _dbContext.SaveChanges();
+
+            return new ShieldReturnType($"Confirme o código enviado para o e-mail '{user.Email}'");
         }
         catch (Exception ex)
         {
@@ -75,6 +76,7 @@ public class UserService : IShieldUser
 
             var user = _dbContext.Users.FirstOrDefault(a => a.Email == email);
             user!.Hash = change.NewHash;
+            user!.EmailConfirmed = true;
             _dbContext.Users.Update(user);
 
             change.Confirmed = true;
@@ -150,7 +152,8 @@ public class UserService : IShieldUser
 
     public ShieldReturnType Login(string username, string password)
     {
-        var user = _dbContext.Users.First(a => a.Username == username) ?? throw new Exception("Usuário não encontrado");
+        var user = _dbContext.Users
+            .FirstOrDefault(a => a.Username == username || a.Email == username) ?? throw new Exception("Usuário não encontrado");
 
         if (user.EmailConfirmed == false)
             throw new Exception("Usuário não encontrado");
@@ -162,6 +165,8 @@ public class UserService : IShieldUser
         if (result == PasswordVerificationResult.Failed)
             throw new Exception("Usuário ou senha incorretos");
 
-        return new ShieldReturnType(_tokenService.GenerateToken(username, user.Email, "", null));
+        var token = _tokenService.GenerateToken(username, user.Email, "ShieldJWT", null);
+
+        return new ShieldReturnType(token);
     }
 }

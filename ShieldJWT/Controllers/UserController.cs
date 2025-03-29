@@ -23,4 +23,8 @@ public class UserController : ShieldControllerAbstract
     [HttpPost("confirm")]
     public IActionResult ConfirmCode(ConfirmCodeRequest request)
         => Handler(_userService.ConfirmPassword, request.Email, request.ConfirmCode);
+
+    [HttpPost("change")]
+    public IActionResult ChangePassword(ChangePasswordRequest request)
+        => Handler(_userService.ChangePassword, request.EmailOrUsername, request.NewPassword);
 }
