@@ -23,7 +23,6 @@ jobs:
         run: |
           dotnet restore ShieldJWT/ShieldJWT.csproj
           dotnet restore ShieldJWTLib/ShieldJWTLib.csproj
-
       - name: Definir ambiente de deploy
         id: define-env
         run: |
@@ -48,8 +47,7 @@ jobs:
       
       - name: Publicar aplicação
         run: |
-            dotnet publish ShieldJWT/ShieldJWT.csproj -c ${{ env.CONFIGURATION }} -o ./publish --environment ${{ env.DEPLOY_ENV }}
-
+            dotnet publish ShieldJWT/ShieldJWT.csproj -c ${{ env.CONFIGURATION }} -o ./publish
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
