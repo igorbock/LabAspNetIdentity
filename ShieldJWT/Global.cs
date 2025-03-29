@@ -7,6 +7,7 @@ global using System.Text.RegularExpressions;
 
 global using ShieldJWT.Services;
 global using ShieldJWT.Context;
+global using ShieldJWT.Exceptions;
 
 global using ShieldJWTLib.Interfaces;
 global using ShieldJWTLib.Models;

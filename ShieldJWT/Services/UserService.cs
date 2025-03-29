@@ -152,21 +152,36 @@ public class UserService : IShieldUser
 
     public ShieldReturnType Login(string username, string password)
     {
-        var user = _dbContext.Users
-            .FirstOrDefault(a => a.Username == username || a.Email == username) ?? throw new Exception("Usuário não encontrado");
+        try
+        {
+            var user = _dbContext.Users
+                .FirstOrDefault(a => a.Username == username || a.Email == username) ?? throw new UserNotFoundException();
 
-        if (user.EmailConfirmed == false)
-            throw new Exception("Usuário não encontrado");
+            if (user.EmailConfirmed == false)
+                throw new UserNotFoundException();
 
-        var newHash = _passwordHasher.HashPassword(user, password);
-        var hash = user.Hash;
+            var newHash = _passwordHasher.HashPassword(user, password);
+            var hash = user.Hash;
 
-        var result = _passwordHasher.VerifyHashedPassword(user, hash!, password);
-        if (result == PasswordVerificationResult.Failed)
-            throw new Exception("Usuário ou senha incorretos");
+            var result = _passwordHasher.VerifyHashedPassword(user, hash!, password);
+            if (result == PasswordVerificationResult.Failed)
+                throw new UserOrPasswordIncorrectException();
 
-        var token = _tokenService.GenerateToken(username, user.Email, "ShieldJWT", null);
+            var token = _tokenService.GenerateToken(username, user.Email, "ShieldJWT", null);
 
-        return new ShieldReturnType(token);
+            return new ShieldReturnType(token);
+        }
+        catch (UserNotFoundException ex)
+        {
+            return new ShieldReturnType(ex.Message, ex.Code);
+        }
+        catch (UserOrPasswordIncorrectException ex)
+        {
+            return new ShieldReturnType(ex.Message, ex.Code);
+        }
+        catch (Exception ex)
+        {
+            return new ShieldReturnType(ex.Message, 500);
+        }
     }
 }

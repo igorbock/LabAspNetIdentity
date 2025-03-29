@@ -3,30 +3,25 @@
 public abstract class ShieldControllerAbstract : ControllerBase
 {
     [NonAction]
-    public IActionResult Handler<SendType1, SendType2, ReturnType>(Func<SendType1, SendType2, ReturnType> method, SendType1 param1, SendType2 param2)
+    public IActionResult Handler(Delegate method, params object[] parameters)
     {
         try
         {
-            var methodReturn = method.Invoke(param1, param2);
-            return StatusCode(200, methodReturn);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex);
-        }
-    }
+            var methodReturn = method.DynamicInvoke(parameters);
 
-    [NonAction]
-    public IActionResult Handler<SendType1, ReturnType>(Func<SendType1, ReturnType> method, SendType1 param1)
-    {
-        try
-        {
-            var methodReturn = method.Invoke(param1);
+            var shieldReturnType = methodReturn as ShieldReturnType;
+            if (shieldReturnType is not null && shieldReturnType.Code.ToString().StartsWith('2') == false)
+                throw new ShieldException(shieldReturnType.Code, shieldReturnType.Message);
+
             return StatusCode(200, methodReturn);
+        }
+        catch (ShieldException ex)
+        {
+            return StatusCode(ex.Code, ex.Message);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return StatusCode(500, ex.Message);
         }
     }
 }
