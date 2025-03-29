@@ -3,7 +3,6 @@ name: Deploy API para MonsterASP
 on:
   push:
     branches:
-      - "master"
       - "homologacao"
 
 jobs:
