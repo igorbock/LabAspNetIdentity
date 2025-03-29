@@ -62,7 +62,10 @@ public class UserService : IShieldUser
     {
         try
         {
-            var change = _dbContext.ChangedPasswords.Last(a => a.Email == email);
+            var change = _dbContext.ChangedPasswords
+                .Where(a => a.Confirmed == false && a.Email == email)
+                .OrderBy(a => a.Id)
+                .LastOrDefault(a => a.Email == email) ?? throw new Exception("E-mail não encontrado");
             if (change.Date.Subtract(DateTime.UtcNow).TotalMinutes > 5)
                 throw new Exception("Tempo expirado");
 

@@ -19,4 +19,8 @@ public class UserController : ShieldControllerAbstract
     [HttpPost("login")]
     public IActionResult Login(TokenRequest request)
         => Handler(_userService.Login, request.User, request.Password);
+
+    [HttpPost("confirm")]
+    public IActionResult ConfirmCode(ConfirmCodeRequest request)
+        => Handler(_userService.ConfirmPassword, request.Email, request.ConfirmCode);
 }
