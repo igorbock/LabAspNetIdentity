@@ -5,6 +5,8 @@ public abstract class ShieldControllerAbstract : ControllerBase
     [NonAction]
     public IActionResult Handler(Delegate method, params object[] parameters)
     {
+        ShieldReturnType genericReturn;
+
         try
         {
             var methodReturn = method.DynamicInvoke(parameters);
@@ -17,11 +19,13 @@ public abstract class ShieldControllerAbstract : ControllerBase
         }
         catch (ShieldException ex)
         {
-            return StatusCode(ex.Code, ex.Message);
+            genericReturn = new ShieldReturnType(ex.Message, ex.Code);
+            return StatusCode(ex.Code, genericReturn);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            genericReturn = new ShieldReturnType(ex.Message, 500);
+            return StatusCode(500, genericReturn);
         }
     }
 }
