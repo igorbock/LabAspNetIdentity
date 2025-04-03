@@ -1,4 +1,4 @@
-﻿using ShieldJWTLib.Models;
+﻿using ShieldJWTLib.Models.DTO;
 
 namespace ShieldJWTLib.Interfaces
 {

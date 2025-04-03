@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 
-namespace ShieldJWTLib.Models
+namespace ShieldJWTLib.Models.DTO
 {
     public class TokenRequest
     {

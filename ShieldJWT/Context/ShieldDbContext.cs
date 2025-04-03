@@ -12,6 +12,6 @@ public class ShieldDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>().HasData(
-            new User { Id = 1, Email = "noreply@gmail.com", Username = "admin", Hash = "" });
+            new User { Id = 1, Email = "noreply.shieldjwt@gmail.com", Username = "admin", Hash = "", EmailConfirmed = true });
     }
 }

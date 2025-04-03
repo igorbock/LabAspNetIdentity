@@ -1,4 +1,4 @@
-﻿namespace ShieldJWTLib.Models
+﻿namespace ShieldJWTLib.Models.DTO
 {
     public class ConfirmCodeRequest
     {

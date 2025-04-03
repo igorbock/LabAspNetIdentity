@@ -12,6 +12,7 @@ global using ShieldJWT.Exceptions;
 global using ShieldJWTLib.Interfaces;
 global using ShieldJWTLib.Models;
 global using ShieldJWTLib.Abstract;
+global using ShieldJWTLib.Models.DTO;
 
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
