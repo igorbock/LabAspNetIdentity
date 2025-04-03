@@ -14,10 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShieldJWT", "ShieldJWT\ShieldJWT.csproj", "{8603E755-745D-483D-A3EE-70DD42FC442F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShieldJWTLib", "ShieldJWTLib\ShieldJWTLib.csproj", "{422B9B0F-DFC2-4B21-A493-258FC923D340}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,18 +33,6 @@ Global
 		{8CEECEA6-D6BB-4308-B0EE-F7639CF5AACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CEECEA6-D6BB-4308-B0EE-F7639CF5AACD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8CEECEA6-D6BB-4308-B0EE-F7639CF5AACD}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{8603E755-745D-483D-A3EE-70DD42FC442F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8603E755-745D-483D-A3EE-70DD42FC442F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8603E755-745D-483D-A3EE-70DD42FC442F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8603E755-745D-483D-A3EE-70DD42FC442F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8603E755-745D-483D-A3EE-70DD42FC442F}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{8603E755-745D-483D-A3EE-70DD42FC442F}.Staging|Any CPU.Build.0 = Staging|Any CPU
-		{422B9B0F-DFC2-4B21-A493-258FC923D340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{422B9B0F-DFC2-4B21-A493-258FC923D340}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{422B9B0F-DFC2-4B21-A493-258FC923D340}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{422B9B0F-DFC2-4B21-A493-258FC923D340}.Release|Any CPU.Build.0 = Release|Any CPU
-		{422B9B0F-DFC2-4B21-A493-258FC923D340}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{422B9B0F-DFC2-4B21-A493-258FC923D340}.Staging|Any CPU.Build.0 = Staging|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
