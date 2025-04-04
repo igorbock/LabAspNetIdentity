@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShieldJWTLib.Models
@@ -20,5 +21,10 @@ namespace ShieldJWTLib.Models
         public string Hash { get; set; }
 
         public bool EmailConfirmed { get; set; }
+
+        [ForeignKey(nameof(Company))]
+        public Guid IdCompany { get; set; }
+
+        public virtual Company Company { get; set; }
     }
 }

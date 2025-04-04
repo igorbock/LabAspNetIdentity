@@ -9,6 +9,10 @@ public abstract class ShieldControllerAbstract : ControllerBase
 
         try
         {
+            HttpContext.Request.Headers.TryGetValue("X-Company-Header", out var idCompany);
+            if (string.IsNullOrEmpty(idCompany))
+                throw new ShieldException(401, "Empresa não autorizada");
+
             var methodReturn = method.DynamicInvoke(parameters);
 
             var shieldReturnType = methodReturn as ShieldReturnType;

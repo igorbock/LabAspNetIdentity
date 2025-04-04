@@ -11,7 +11,7 @@ namespace ShieldJWTLib.Models
         public Guid Id { get; set; }
 
         [StringLength(80)]
-        public string RazaoSocial { get; set; }
+        public string CompanyName { get; set; }
 
         [StringLength(14)]
         public string CNPJ { get; set; }

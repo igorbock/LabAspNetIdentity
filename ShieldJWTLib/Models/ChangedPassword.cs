@@ -23,5 +23,10 @@ namespace ShieldJWTLib.Models
         public bool Confirmed { get; set; }
 
         public DateTime Date { get; set; }
+
+        [ForeignKey(nameof(Company))]
+        public Guid IdCompany { get; set; }
+
+        public virtual Company Company { get; set; }
     }
 }
