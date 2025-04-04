@@ -11,6 +11,7 @@ var configuration = new ConfigurationBuilder()
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSingleton<IConfiguration>(configuration);
 
@@ -29,12 +30,8 @@ builder.Services.AddDbContext<ShieldDbContext>(opt =>
 
 var app = builder.Build();
 
-app.UseSwaggerUI(options => 
-{
-    app.MapOpenApi();
-    options.RoutePrefix = "swagger";
-    options.SwaggerEndpoint("/openapi/v1.json", "OpenAPI V1");
-});
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 
