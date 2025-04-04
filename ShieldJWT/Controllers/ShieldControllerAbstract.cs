@@ -2,6 +2,13 @@
 
 public abstract class ShieldControllerAbstract : ControllerBase
 {
+    private readonly IShieldCompany _companyService;
+
+    public ShieldControllerAbstract(IShieldCompany companyService)
+    {
+        _companyService = companyService;
+    }
+
     [NonAction]
     public IActionResult Handler(Delegate method, params object[] parameters)
     {
@@ -10,9 +17,12 @@ public abstract class ShieldControllerAbstract : ControllerBase
         try
         {
             HttpContext.Request.Headers.TryGetValue("X-Company-Header", out var idCompany);
-            if (string.IsNullOrEmpty(idCompany))
+            var guidCorrect = Guid.TryParse(idCompany, out Guid result);
+            if (guidCorrect == false)
                 throw new ShieldException(401, "Empresa não autorizada");
 
+            _companyService.ValidateCompany(result);
+            
             var methodReturn = method.DynamicInvoke(parameters);
 
             var shieldReturnType = methodReturn as ShieldReturnType;

@@ -7,7 +7,7 @@ public class UserController : ShieldControllerAbstract
 {
     private readonly IShieldUser _userService;
 
-    public UserController(IShieldUser userService)
+    public UserController(IShieldUser userService, IShieldCompany companyService) : base(companyService)
     {
         _userService = userService;
     }
