@@ -1,6 +1,4 @@
-﻿using System.Net.Mime;
-
-namespace ShieldJWT.Middlewares;
+﻿namespace ShieldJWT.Middlewares;
 
 public class CompanyMiddleware : IMiddleware
 {
@@ -27,6 +25,7 @@ public class CompanyMiddleware : IMiddleware
 
             context.Items.Add("IdCompany", idCompany);
 
+            await next.Invoke(context);
             //TODO #23
             //var log = new Log
             //{

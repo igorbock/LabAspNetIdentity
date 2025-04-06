@@ -93,7 +93,7 @@ public class UserService : IShieldUser
         }
     }
 
-    public ShieldReturnType Create(CreateUser newUser)
+    public ShieldReturnType Create(CreateUser newUser, Guid idCompany)
     {
         try
         {
@@ -113,7 +113,8 @@ public class UserService : IShieldUser
             {
                 Email = newUser.Email,
                 Username = newUser.Username,
-                EmailConfirmed = false
+                EmailConfirmed = false,
+                IdCompany = idCompany
             };
 
             var newHash = _passwordHasher.HashPassword(user, newUser.Password);
@@ -124,7 +125,8 @@ public class UserService : IShieldUser
                 Email = newUser.Email,
                 Date = DateTime.UtcNow,
                 NewHash = newHash,
-                Confirmed = false
+                Confirmed = false,
+                IdCompany = idCompany
             };
 
             var byteFill = new byte[4];
@@ -138,9 +140,9 @@ public class UserService : IShieldUser
             _dbContext.Add(user);
             _dbContext.Add(newAccount);
 
-            _mailService.SendConfirmCodeTo(newUser.Email, newUser.Username, stringCode, "Confirmação de nova conta - Shield JWT");
-
             _dbContext.SaveChanges();
+
+            _mailService.SendConfirmCodeTo(newUser.Email, newUser.Username, stringCode, "Confirmação de nova conta - Shield JWT");
 
             return new ShieldReturnType($"Usuário criado com sucesso. Confirme o código enviado no e-mail '{newUser.Email}'");
         }

@@ -12,24 +12,18 @@ public abstract class ShieldControllerAbstract : ControllerBase
     [NonAction]
     public IActionResult Handler(Delegate method, params object[] parameters)
     {
-        ShieldReturnType genericReturn;
+        ShieldReturnType? genericReturn = null;
+        Guid idCompany = Guid.Empty;
 
         try
         {
-            HttpContext.Request.Headers.TryGetValue("X-Company-Header", out var idCompany);
-            var guidCorrect = Guid.TryParse(idCompany, out Guid result);
-            if (guidCorrect == false)
-                throw new ShieldException(401, "Empresa não autorizada");
-
-            _companyService.ValidateCompany(result);
-            
             var methodReturn = method.DynamicInvoke(parameters);
 
-            var shieldReturnType = methodReturn as ShieldReturnType;
-            if (shieldReturnType is not null && shieldReturnType.Code.ToString().StartsWith('2') == false)
-                throw new ShieldException(shieldReturnType.Code, shieldReturnType.Message);
+            genericReturn = methodReturn as ShieldReturnType;
+            if (genericReturn is not null && genericReturn.Code.ToString().StartsWith('2') == false)
+                throw new ShieldException(genericReturn.Code, genericReturn.Message);
 
-            return StatusCode(200, methodReturn);
+            return StatusCode(200, genericReturn);
         }
         catch (ShieldException ex)
         {
@@ -40,6 +34,24 @@ public abstract class ShieldControllerAbstract : ControllerBase
         {
             genericReturn = new ShieldReturnType(ex.Message, 500);
             return StatusCode(500, genericReturn);
+        }
+        finally
+        {
+            if (HttpContext.Request.Path.Value!.Contains("user/login") && genericReturn!.Code == 200)
+                genericReturn.Message = genericReturn.Message.EncryptString("teste13783413417583473478348714");
+
+            if (idCompany != Guid.Empty)
+            {
+                var log = new Log
+                {
+                    Method = HttpContext.Request.Method,
+                    Endpoint = HttpContext.Request.Path,
+                    IdCompany = idCompany,
+                    ReturnType = System.Text.Json.JsonSerializer.Serialize(genericReturn)
+                };
+
+                _companyService.CreateLog(log);
+            }
         }
     }
 }

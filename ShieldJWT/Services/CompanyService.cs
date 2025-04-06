@@ -9,6 +9,12 @@ public class CompanyService : IShieldCompany
         _context = context;
     }
 
+    public void CreateLog(Log log)
+    {
+        _context.Logs.Add(log);
+        _context.SaveChanges();
+    }
+
     public void ValidateCompany(Guid idCompany)
     {
         var company = _context.Companies.Find(idCompany);
