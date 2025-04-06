@@ -34,6 +34,8 @@ var app = builder.Build();
 app.MapOpenApi();
 app.MapScalarApiReference();
 
+app.UseMiddleware<CompanyMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
