@@ -1,15 +1,15 @@
 ﻿namespace ShieldJWT.Middlewares;
 
-public class CompanyMiddleware : IMiddleware
+public class CompanyMiddleware
 {
-    private readonly IShieldCompany _companyService;
+    private readonly RequestDelegate _next;
 
-    public CompanyMiddleware(IShieldCompany companyService)
+    public CompanyMiddleware(RequestDelegate next)
     {
-        _companyService = companyService;
+        _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context, IShieldCompany companyService)
     {
         try
         {
@@ -21,11 +21,11 @@ public class CompanyMiddleware : IMiddleware
             if (guidParseCorrect == false)
                 throw new ShieldException(401, "Empresa não autorizada");
 
-            _companyService.ValidateCompany(idCompany);
+            companyService.ValidateCompany(idCompany);
 
             context.Items.Add("IdCompany", idCompany);
 
-            await next.Invoke(context);
+            await _next(context);
             //TODO #23
             //var log = new Log
             //{

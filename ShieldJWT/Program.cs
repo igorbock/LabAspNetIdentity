@@ -20,7 +20,6 @@ builder.Services.AddScoped<IShieldUser, UserService>();
 builder.Services.AddScoped<IShieldMail, MailService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordService>();
 builder.Services.AddScoped<IShieldCompany, CompanyService>();
-builder.Services.AddScoped<IMiddleware, CompanyMiddleware>();
 
 builder.Services.AddDbContext<ShieldDbContext>(opt =>
 {
