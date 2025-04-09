@@ -29,12 +29,15 @@ builder.Services.AddDbContext<ShieldDbContext>(opt =>
     });
 });
 
+builder.Services.AddControllersWithViews(opt =>
+{
+    opt.Filters.Add<CompanyActionFilter>();
+});
+
 var app = builder.Build();
 
 app.MapOpenApi();
 app.MapScalarApiReference();
-
-app.UseMiddleware<CompanyMiddleware>();
 
 app.UseHttpsRedirection();
 
