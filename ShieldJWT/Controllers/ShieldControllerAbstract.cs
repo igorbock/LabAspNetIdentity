@@ -13,7 +13,7 @@ public abstract class ShieldControllerAbstract : ControllerBase
     public IActionResult Handler(Delegate method, params object[] parameters)
     {
         ShieldReturnType? genericReturn = null;
-        Guid idCompany = Guid.Empty;
+        Guid idCompany = (Guid)HttpContext.Items["IdCompany"]!;
 
         try
         {

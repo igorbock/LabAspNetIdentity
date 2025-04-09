@@ -14,7 +14,7 @@ public class UserController : ShieldControllerAbstract
 
     [HttpPost("create")]
     public IActionResult Create(CreateUser user)
-        => Handler((CreateUser request, Guid id) => _userService.Create(request, id), user, HttpContext.Request.Headers["X-Company-Header"]);
+        => Handler((CreateUser request, Guid id) => _userService.Create(request, id), user, (Guid)HttpContext.Items["IdCompany"]!);
 
     [HttpPost("login")]
     public IActionResult Login(TokenRequest request)
