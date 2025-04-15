@@ -13,6 +13,10 @@ public class CompanyActionFilter : IAsyncActionFilter
     {
         Guid idCompany = Guid.Empty;
         ActionExecutedContext? nextActionExecutionDelegate = null;
+        var log = new Log
+        {
+            InputTime = DateTime.Now
+        };
 
         try
         {
@@ -53,13 +57,12 @@ public class CompanyActionFilter : IAsyncActionFilter
             {
                 var result = nextActionExecutionDelegate!.Result as ObjectResult;
                 var value = result!.Value as ShieldReturnType;
-                var log = new Log
-                {
-                    Method = context.HttpContext.Request.Method,
-                    Endpoint = context.HttpContext.Request.Path,
-                    IdCompany = idCompany,
-                    ReturnType = System.Text.Json.JsonSerializer.Serialize(value)
-                };
+
+                log.Method = context.HttpContext.Request.Method;
+                log.Endpoint = context.HttpContext.Request.Path;
+                log.IdCompany = idCompany;
+                log.ReturnType = System.Text.Json.JsonSerializer.Serialize(value);
+                log.OutputTime = DateTime.Now;
 
                 _companyService.CreateLog(log);
             }

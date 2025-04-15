@@ -21,6 +21,10 @@ namespace ShieldJWTLib.Models
 
         public string ReturnType { get; set; }
 
+        public DateTime? InputTime { get; set; }
+
+        public DateTime? OutputTime { get; set; }
+
         public Company Company { get; set; }
     }
 }
