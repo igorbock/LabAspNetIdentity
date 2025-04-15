@@ -11,13 +11,16 @@ public class CompanyActionFilter : IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
+        Guid idCompany = Guid.Empty;
+        ActionExecutedContext? nextActionExecutionDelegate = null;
+
         try
         {
             var guidCorrect = context.HttpContext.Request.Headers.TryGetValue("X-Company-Header", out var guidString);
             if (guidCorrect == false)
                 throw new ShieldException(401, "Empresa não autorizada");
 
-            var guidParseCorrect = Guid.TryParse(guidString, out Guid idCompany);
+            var guidParseCorrect = Guid.TryParse(guidString, out idCompany);
             if (guidParseCorrect == false)
                 throw new ShieldException(401, "Empresa não autorizada");
 
@@ -25,14 +28,7 @@ public class CompanyActionFilter : IAsyncActionFilter
 
             context.HttpContext.Items.Add("IdCompany", idCompany);
 
-            await next();
-            //TODO #23
-            //var log = new Log
-            //{
-            //    Endpoint = context.Request.Path,
-            //    Method = context.Request.Method,
-            //    IdCompany = idCompany
-            //};
+            nextActionExecutionDelegate = await next();
         }
         catch (ShieldException ex)
         {
@@ -50,8 +46,23 @@ public class CompanyActionFilter : IAsyncActionFilter
 
             var json = System.Text.Json.JsonSerializer.Serialize(problem);
             await context.HttpContext.Response.WriteAsync(json);
+        }
+        finally
+        {
+            if (idCompany != Guid.Empty)
+            {
+                var result = nextActionExecutionDelegate!.Result as ObjectResult;
+                var value = result!.Value as ShieldReturnType;
+                var log = new Log
+                {
+                    Method = context.HttpContext.Request.Method,
+                    Endpoint = context.HttpContext.Request.Path,
+                    IdCompany = idCompany,
+                    ReturnType = System.Text.Json.JsonSerializer.Serialize(value)
+                };
 
-            await next();
+                _companyService.CreateLog(log);
+            }
         }
     }
 }

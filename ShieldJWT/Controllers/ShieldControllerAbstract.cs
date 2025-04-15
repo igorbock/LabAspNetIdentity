@@ -39,19 +39,6 @@ public abstract class ShieldControllerAbstract : ControllerBase
         {
             if (HttpContext.Request.Path.Value!.Contains("user/login") && genericReturn!.Code == 200)
                 genericReturn.Message = genericReturn.Message.EncryptString("teste13783413417583473478348714");
-
-            if (idCompany != Guid.Empty)
-            {
-                var log = new Log
-                {
-                    Method = HttpContext.Request.Method,
-                    Endpoint = HttpContext.Request.Path,
-                    IdCompany = idCompany,
-                    ReturnType = System.Text.Json.JsonSerializer.Serialize(genericReturn)
-                };
-
-                _companyService.CreateLog(log);
-            }
         }
     }
 }
