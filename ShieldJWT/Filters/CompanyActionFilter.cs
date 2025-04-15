@@ -57,6 +57,10 @@ public class CompanyActionFilter : IAsyncActionFilter
             {
                 var result = nextActionExecutionDelegate!.Result as ObjectResult;
                 var value = result!.Value as ShieldReturnType;
+                var oldValue = value!.Message;
+
+                if (context.HttpContext.Request.Path.Value!.Contains("User/login") && value!.Code == 200)
+                    value!.Message = "JWT".EncryptString();
 
                 log.Method = context.HttpContext.Request.Method;
                 log.Endpoint = context.HttpContext.Request.Path;
@@ -65,6 +69,8 @@ public class CompanyActionFilter : IAsyncActionFilter
                 log.OutputTime = DateTime.Now;
 
                 _companyService.CreateLog(log);
+
+                value.Message = oldValue;
             }
         }
     }

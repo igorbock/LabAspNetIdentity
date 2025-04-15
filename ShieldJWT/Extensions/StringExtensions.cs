@@ -2,11 +2,11 @@
 
 public static class StringExtensions
 {
-    public static string EncryptString(this string plainText, string key)
+    public static string EncryptString(this string plainText)
     {
-        using Aes aes = Aes.Create();
-        aes.Key = Encoding.UTF8.GetBytes(key);
-        aes.GenerateIV();
+        using var aes = Aes.Create();
+        aes.KeySize = 256;
+        aes.GenerateKey();
 
         using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
         

@@ -35,10 +35,5 @@ public abstract class ShieldControllerAbstract : ControllerBase
             genericReturn = new ShieldReturnType(ex.Message, 500);
             return StatusCode(500, genericReturn);
         }
-        finally
-        {
-            if (HttpContext.Request.Path.Value!.Contains("user/login") && genericReturn!.Code == 200)
-                genericReturn.Message = genericReturn.Message.EncryptString("teste13783413417583473478348714");
-        }
     }
 }
