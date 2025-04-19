@@ -169,7 +169,9 @@ public class UserService : IShieldUser
             if (result == PasswordVerificationResult.Failed)
                 throw new UserOrPasswordIncorrectException();
 
-            var token = _tokenService.GenerateToken(username, user.Email, "ShieldJWT", null);
+            var claimsTypes = _dbContext.Claims.Where(a => a.IdUser == user.Id);
+
+            var token = _tokenService.GenerateToken(username, user.Email, "ShieldJWT", claimsTypes.ToSystemClaim());
 
             return new ShieldReturnType(token);
         }

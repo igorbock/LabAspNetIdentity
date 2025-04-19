@@ -6,6 +6,7 @@ public class ShieldDbContext : DbContext
     public virtual DbSet<ChangedPassword> ChangedPasswords { get; set; }
     public virtual DbSet<Company> Companies { get; set; }
     public virtual DbSet<Log> Logs { get; set; }
+    public virtual DbSet<ShieldClaim> Claims { get; set; }
 
     public ShieldDbContext(DbContextOptions<ShieldDbContext> options) : base(options) { }
 
