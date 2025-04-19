@@ -22,9 +22,7 @@ public class TokenService : TokenServiceAbstract
 
         var subject = new Claim(ClaimTypes.NameIdentifier, username);
         var emailClaim = new Claim (ClaimTypes.Email, email);
-        claims.Append(subject);
-        claims.Append(emailClaim);
-
+        claims = claims.Concat([subject, emailClaim]);
 
         var jwt = new JwtSecurityToken(
             issuer: _issuer,
