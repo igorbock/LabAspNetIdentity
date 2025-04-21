@@ -6,17 +6,20 @@ public class UserService : IShieldUser
     private readonly IShieldMail _mailService;
     private readonly ShieldDbContext _dbContext;
     private readonly TokenServiceAbstract _tokenService;
+    private readonly IShieldEntity<ShieldClaim> _claimService;
 
     public UserService(
         IPasswordHasher<User> passwordHasher, 
         ShieldDbContext dbContext, 
         IShieldMail mailService, 
-        TokenServiceAbstract tokenService)
+        TokenServiceAbstract tokenService,
+        IShieldEntity<ShieldClaim> claimService)
     {
         _passwordHasher = passwordHasher;
         _dbContext = dbContext;
         _mailService = mailService;
         _tokenService = tokenService;
+        _claimService = claimService;
     }
 
     public ShieldReturnType ChangePassword(string email, string newPassword)
@@ -169,7 +172,7 @@ public class UserService : IShieldUser
             if (result == PasswordVerificationResult.Failed)
                 throw new UserOrPasswordIncorrectException();
 
-            var claimsTypes = _dbContext.Claims.Where(a => a.IdUser == user.Id);
+            var claimsTypes = _claimService.GetAll(a => a.IdUser == user.Id);
 
             var token = _tokenService.GenerateToken(username, user.Email, "ShieldJWT", claimsTypes.ToSystemClaim());
 

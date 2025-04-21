@@ -14,11 +14,6 @@ namespace ShieldJWTLib.Models
 
         public string Value { get; set; }
 
-        //[ForeignKey(nameof(Company))]
-        //public Guid IdCompany { get; set; }
-
-        //public Company Company { get; set; }
-
         [ForeignKey(nameof(User))]
         public int IdUser { get; set; }
 
