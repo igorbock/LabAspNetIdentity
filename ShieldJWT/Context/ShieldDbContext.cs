@@ -7,6 +7,7 @@ public class ShieldDbContext : DbContext
     public virtual DbSet<Company> Companies { get; set; }
     public virtual DbSet<Log> Logs { get; set; }
     public virtual DbSet<ShieldClaim> Claims { get; set; }
+    public virtual DbSet<LogDeleteIteration> LogDeleteIterations { get; set; }
 
     public ShieldDbContext(DbContextOptions<ShieldDbContext> options) : base(options) { }
 
