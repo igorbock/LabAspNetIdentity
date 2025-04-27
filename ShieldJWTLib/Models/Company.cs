@@ -15,5 +15,7 @@ namespace ShieldJWTLib.Models
 
         [StringLength(14)]
         public string CNPJ { get; set; }
+
+        public int IntervalDaysToRemoveLogs { get; set; }
     }
 }
