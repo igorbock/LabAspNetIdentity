@@ -10,6 +10,7 @@ global using ShieldJWT.Context;
 global using ShieldJWT.Exceptions;
 global using ShieldJWT.Extensions;
 global using ShieldJWT.Middlewares;
+global using ShieldJWT.BackgroundServices;
 global using ShieldJWT.Filters;
 
 global using ShieldJWTLib.Interfaces;
