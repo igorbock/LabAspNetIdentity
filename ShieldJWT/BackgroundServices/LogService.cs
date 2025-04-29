@@ -3,21 +3,22 @@
 public class LogService : IHostedService, IDisposable
 {
     private Timer? _timer;
-    private readonly ShieldDbContext _context;
+    private readonly IShieldEntity<Log> _logService;
+    private readonly IShieldEntity<LogDeleteIteration> _logDeleteIterationService;
 
-    public LogService(ShieldDbContext context)
+    public LogService(IShieldEntity<Log> logService, IShieldEntity<LogDeleteIteration> logDeleteIteration)
     {
-        _context = context;
+        _logService = logService;
+        _logDeleteIterationService = logDeleteIteration;
     }
 
     private void CleanLogs(object? state)
     {
-        _context.Logs.Load();
-        var logs = _context.Logs.Local;
+        var logs = _logService.GetAll();
 
         try
         {
-            var lastLogIteration = _context.LogDeleteIterations.OrderByDescending(a => a.LastIterationDate).FirstOrDefault();
+            var lastLogIteration = _logDeleteIterationService.GetAll().OrderByDescending(a => a.LastIterationDate).FirstOrDefault();
             if (lastLogIteration is null)
                 throw new ShieldException(200, "Excluindo logs...");
 
@@ -27,13 +28,13 @@ public class LogService : IHostedService, IDisposable
         }
         catch (ShieldException)
         {
-            _context.RemoveRange(logs);
+            _logService.Delete();
         }
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(CleanLogs, null, TimeSpan.Zero, TimeSpan.FromDays(15));
+        _timer = new Timer(CleanLogs, null, TimeSpan.Zero, TimeSpan.FromDays(90));
         return Task.CompletedTask;
     }
 

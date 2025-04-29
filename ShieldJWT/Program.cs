@@ -21,6 +21,10 @@ builder.Services.AddScoped<IShieldMail, MailService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordService>();
 builder.Services.AddScoped<IShieldCompany, CompanyService>();
 builder.Services.AddScoped<IShieldEntity<ShieldClaim>, ShieldClaimService>();
+builder.Services.AddScoped<IShieldEntity<Log>, ShieldLogService>();
+builder.Services.AddScoped<IShieldEntity<LogDeleteIteration>, ShieldLogDeleteIterationService>();
+
+builder.Services.AddHostedService<LogService>();
 
 builder.Services.AddDbContext<ShieldDbContext>(opt =>
 {

@@ -8,6 +8,6 @@ namespace ShieldJWTLib.Interfaces
         IEnumerable<TypeT> GetAll(Func<TypeT, bool> predicado = null);
         int Create(IEnumerable<TypeT> entities);
         int Update(IEnumerable<TypeT> entities);
-        int Delete(int id);
+        int Delete(int? id = null);
     }
 }
